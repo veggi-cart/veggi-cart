@@ -1,240 +1,200 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-
-// function UserDetailsPage() {
-//   const navigate = useNavigate();
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     phoneNumber: "",
-//     homeAddress: "",
-//   });
-
-//   const handleChange = (e) => {
-//     setFormData({
-//       ...formData,
-//       [e.target.name]: e.target.value,
-//     });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-
-//     if (!formData.name || !formData.phoneNumber) {
-//       alert("Please fill in Name and Phone Number");
-//       return;
-//     }
-
-//     localStorage.setItem("userDetails", JSON.stringify(formData));
-//     navigate("/");
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-50">
-//       {/* Header */}
-//       <header className="bg-white border-b border-gray-200">
-//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//           <div className="flex items-center justify-between h-16">
-//             <div className="flex items-center gap-3">
-//               <span className="text-3xl">🥬</span>
-//               <h1 className="text-2xl font-bold text-gray-900">Veggie-Cart</h1>
-//             </div>
-//           </div>
-//         </div>
-//       </header>
-
-//       {/* Form Container */}
-//       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-//         <div className="mb-8">
-//           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-//             Welcome! 👋
-//           </h2>
-//           <p className="text-gray-600 text-lg">
-//             Please provide your details to start shopping
-//           </p>
-//         </div>
-
-//         <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8">
-//           <form onSubmit={handleSubmit} className="space-y-6">
-//             {/* Name */}
-//             <div>
-//               <label
-//                 htmlFor="name"
-//                 className="block text-sm font-semibold text-gray-900 mb-2"
-//               >
-//                 Name <span className="text-red-500">*</span>
-//               </label>
-//               <input
-//                 type="text"
-//                 id="name"
-//                 name="name"
-//                 value={formData.name}
-//                 onChange={handleChange}
-//                 required
-//                 placeholder="Enter your full name"
-//                 className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900"
-//               />
-//             </div>
-
-//             {/* Phone Number */}
-//             <div>
-//               <label
-//                 htmlFor="phoneNumber"
-//                 className="block text-sm font-semibold text-gray-900 mb-2"
-//               >
-//                 Phone Number <span className="text-red-500">*</span>
-//               </label>
-//               <input
-//                 type="tel"
-//                 id="phoneNumber"
-//                 name="phoneNumber"
-//                 value={formData.phoneNumber}
-//                 onChange={handleChange}
-//                 required
-//                 placeholder="Enter your phone number"
-//                 pattern="[0-9]{10}"
-//                 title="Please enter a valid 10-digit phone number"
-//                 className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900"
-//               />
-//               <p className="mt-2 text-sm text-gray-500">
-//                 Enter 10-digit mobile number
-//               </p>
-//             </div>
-
-//             {/* Home Address */}
-//             <div>
-//               <label
-//                 htmlFor="homeAddress"
-//                 className="block text-sm font-semibold text-gray-900 mb-2"
-//               >
-//                 Home Address
-//               </label>
-//               <textarea
-//                 id="homeAddress"
-//                 name="homeAddress"
-//                 value={formData.homeAddress}
-//                 onChange={handleChange}
-//                 rows="4"
-//                 placeholder="Enter your complete delivery address"
-//                 className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900 resize-none"
-//               />
-//             </div>
-
-//             {/* Submit Button */}
-//             <button
-//               type="submit"
-//               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-medium transition-colors"
-//             >
-//               Continue Shopping
-//             </button>
-//           </form>
-//         </div>
-
-//         {/* Info Card */}
-//         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-//           <div className="flex gap-3">
-//             <svg
-//               className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
-//               fill="currentColor"
-//               viewBox="0 0 20 20"
-//             >
-//               <path
-//                 fillRule="evenodd"
-//                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-//                 clipRule="evenodd"
-//               />
-//             </svg>
-//             <div className="text-sm text-blue-900">
-//               <p className="font-semibold mb-1">Your information is safe</p>
-//               <p className="text-blue-800">
-//                 We'll use this information only for order delivery and
-//                 communication purposes.
-//               </p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default UserDetailsPage;
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/common/Header";
+import FormInput from "../components/common/FormInput";
+import LocationDetector from "../components/user/LocationDetector";
 
 function UserDetailsPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
-    homeAddress: "",
+    flatNo: "",
+    apartmentName: "",
+    fullAddress: "",
   });
   const [location, setLocation] = useState({
     latitude: null,
     longitude: null,
     address: "",
   });
-  const [loadingLocation, setLoadingLocation] = useState(false);
-  const [locationError, setLocationError] = useState("");
+  const [locationState, setLocationState] = useState({
+    isLoading: false,
+    error: null,
+    permissionStatus: null,
+  });
 
   useEffect(() => {
-    // Fetch location on component mount
-    fetchLocation();
+    // Load existing user details if available
+    const existingDetails = localStorage.getItem("userDetails");
+    if (existingDetails) {
+      const details = JSON.parse(existingDetails);
+      setFormData(details);
+    }
+
+    // Load existing location if available
+    const existingLocation = localStorage.getItem("userLocation");
+    if (existingLocation) {
+      const loc = JSON.parse(existingLocation);
+      setLocation(loc);
+    }
+
+    checkLocationPermission();
   }, []);
 
-  const fetchLocation = () => {
-    setLoadingLocation(true);
-    setLocationError("");
+  // Check location permission status
+  const checkLocationPermission = async () => {
+    if (!navigator.geolocation) {
+      setLocationState({
+        isLoading: false,
+        error: "Geolocation is not supported by your browser",
+        permissionStatus: "unsupported",
+      });
+      return;
+    }
+
+    // Check permission status if available
+    if (navigator.permissions) {
+      try {
+        const permission = await navigator.permissions.query({
+          name: "geolocation",
+        });
+
+        setLocationState((prev) => ({
+          ...prev,
+          permissionStatus: permission.state,
+        }));
+
+        // Auto-fetch if permission already granted and no location saved
+        if (permission.state === "granted" && !location.address) {
+          fetchLocation();
+        }
+
+        // Listen for permission changes
+        permission.addEventListener("change", () => {
+          setLocationState((prev) => ({
+            ...prev,
+            permissionStatus: permission.state,
+          }));
+        });
+      } catch (error) {
+        console.error("Permission API error:", error);
+        setLocationState((prev) => ({
+          ...prev,
+          permissionStatus: "unknown",
+        }));
+      }
+    }
+  };
+
+  const fetchLocation = async () => {
+    setLocationState({
+      isLoading: true,
+      error: null,
+      permissionStatus: locationState.permissionStatus,
+    });
 
     if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser");
-      setLoadingLocation(false);
+      setLocationState({
+        isLoading: false,
+        error: "Geolocation is not supported by your browser",
+        permissionStatus: "unsupported",
+      });
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        setLocation((prev) => ({ ...prev, latitude, longitude }));
 
-        // Fetch address from coordinates using reverse geocoding
+        setLocationState((prev) => ({
+          ...prev,
+          permissionStatus: "granted",
+        }));
+
         try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
-          );
-          const data = await response.json();
-          const address = data.display_name || "Address not found";
+          const address = await reverseGeocode(latitude, longitude);
+
           setLocation({ latitude, longitude, address });
           setFormData((prev) => ({
             ...prev,
-            homeAddress: address,
+            fullAddress: address,
           }));
-        } catch (error) {
-          console.error("Error fetching address:", error);
-          setLocation((prev) => ({
-            ...prev,
-            address: "Unable to fetch address",
-          }));
-        }
 
-        setLoadingLocation(false);
+          setLocationState({
+            isLoading: false,
+            error: null,
+            permissionStatus: "granted",
+          });
+        } catch (error) {
+          console.error("Geocoding error:", error);
+          setLocation({
+            latitude,
+            longitude,
+            address: "Unable to fetch address",
+          });
+          setLocationState({
+            isLoading: false,
+            error: "Could not fetch address, but coordinates are saved",
+            permissionStatus: "granted",
+          });
+        }
       },
       (error) => {
-        setLoadingLocation(false);
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            setLocationError("Location permission denied. Please enable it.");
-            break;
-          case error.POSITION_UNAVAILABLE:
-            setLocationError("Location information unavailable.");
-            break;
-          case error.TIMEOUT:
-            setLocationError("Location request timed out.");
-            break;
-          default:
-            setLocationError("An unknown error occurred.");
-        }
+        handleLocationError(error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
       },
     );
+  };
+
+  const reverseGeocode = async (latitude, longitude) => {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`,
+      {
+        headers: {
+          "User-Agent": "Veggie-Cart/1.0",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Geocoding service unavailable");
+    }
+
+    const data = await response.json();
+    return data.display_name || "Address not found";
+  };
+
+  const handleLocationError = (error) => {
+    let errorMessage = "";
+    let permissionStatus = locationState.permissionStatus;
+
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        errorMessage =
+          "Location access denied. Please enable location permissions in your browser settings.";
+        permissionStatus = "denied";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        errorMessage =
+          "Location information unavailable. Please check your device settings.";
+        break;
+      case error.TIMEOUT:
+        errorMessage = "Location request timed out. Please try again.";
+        break;
+      default:
+        errorMessage = "An unknown error occurred while fetching location.";
+    }
+
+    setLocationState({
+      isLoading: false,
+      error: errorMessage,
+      permissionStatus,
+    });
   };
 
   const handleChange = (e) => {
@@ -247,8 +207,14 @@ function UserDetailsPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.phoneNumber) {
-      alert("Please fill in Name and Phone Number");
+    if (
+      !formData.name ||
+      !formData.phoneNumber ||
+      !formData.flatNo ||
+      !formData.apartmentName ||
+      !formData.fullAddress
+    ) {
+      alert("Please fill in all required fields");
       return;
     }
 
@@ -261,176 +227,108 @@ function UserDetailsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🥬</span>
-              <h1 className="text-2xl font-bold text-gray-900">Veggie-Cart</h1>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header showBackButton={true} />
 
       {/* Form Container */}
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
-            Welcome! 👋
+            {formData.name ? `Hello, ${formData.name}! 👋` : "Welcome! 👋"}
           </h2>
           <p className="text-gray-600 text-lg">
-            Please provide your details to start shopping
+            {formData.name
+              ? "Update your delivery details"
+              : "Please provide your details to start shopping"}
           </p>
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Name */}
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-semibold text-gray-900 mb-2"
-              >
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder="Enter your full name"
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900"
-              />
-            </div>
+            <FormInput
+              id="name"
+              name="name"
+              type="text"
+              value={formData.name}
+              onChange={handleChange}
+              label="Name"
+              placeholder="Enter your full name"
+              required={true}
+            />
 
             {/* Phone Number */}
-            <div>
-              <label
-                htmlFor="phoneNumber"
-                className="block text-sm font-semibold text-gray-900 mb-2"
-              >
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                required
-                placeholder="Enter your phone number"
-                pattern="[0-9]{10}"
-                title="Please enter a valid 10-digit phone number"
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900"
-              />
-              <p className="mt-2 text-sm text-gray-500">
-                Enter 10-digit mobile number
-              </p>
-            </div>
+            <FormInput
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              label="Phone Number"
+              placeholder="Enter your phone number"
+              pattern="[0-9]{10}"
+              title="Please enter a valid 10-digit phone number"
+              helperText="Enter 10-digit mobile number"
+              required={true}
+            />
 
-            {/* Location Detection */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-semibold text-gray-900">
-                  Delivery Location
-                </label>
-                <button
-                  type="button"
-                  onClick={fetchLocation}
-                  disabled={loadingLocation}
-                  className="text-sm text-emerald-600 hover:text-emerald-700 font-medium disabled:opacity-50"
-                >
-                  {loadingLocation ? "Detecting..." : "📍 Detect Location"}
-                </button>
+            {/* Delivery Address Section */}
+            <div className="border-t border-gray-200 pt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Delivery Address
+              </h3>
+
+              {/* Flat/House No */}
+              <div className="mb-4">
+                <FormInput
+                  id="flatNo"
+                  name="flatNo"
+                  type="text"
+                  value={formData.flatNo}
+                  onChange={handleChange}
+                  label="Home / Flat No."
+                  placeholder="e.g., 101, A-12"
+                  required={true}
+                />
               </div>
 
-              {loadingLocation && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                    <span className="text-sm text-blue-900">
-                      Fetching your location...
-                    </span>
-                  </div>
-                </div>
-              )}
+              {/* Apartment/House Name */}
+              <div className="mb-4">
+                <FormInput
+                  id="apartmentName"
+                  name="apartmentName"
+                  type="text"
+                  value={formData.apartmentName}
+                  onChange={handleChange}
+                  label="Apartment / House Name"
+                  placeholder="e.g., Green Valley Apartments, Sunrise Villa"
+                  required={true}
+                />
+              </div>
 
-              {locationError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-3">
-                  <div className="flex items-center gap-3">
-                    <svg
-                      className="w-5 h-5 text-red-600 flex-shrink-0"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-sm text-red-900">
-                      {locationError}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {location.address && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-3">
-                  <div className="flex items-start gap-3">
-                    <svg
-                      className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <div className="flex-1">
-                      <p className="text-sm font-semibold text-emerald-900 mb-1">
-                        Location Detected
-                      </p>
-                      <p className="text-sm text-emerald-800">
-                        {location.address}
-                      </p>
-                      {location.latitude && location.longitude && (
-                        <p className="text-xs text-emerald-700 mt-1">
-                          Coordinates: {location.latitude.toFixed(6)},{" "}
-                          {location.longitude.toFixed(6)}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Home Address */}
-            <div>
-              <label
-                htmlFor="homeAddress"
-                className="block text-sm font-semibold text-gray-900 mb-2"
-              >
-                Home Address
-              </label>
-              <textarea
-                id="homeAddress"
-                name="homeAddress"
-                value={formData.homeAddress}
-                onChange={handleChange}
-                rows="4"
-                placeholder="Enter or edit your complete delivery address"
-                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-gray-900 resize-none"
+              {/* Location Detection */}
+              <LocationDetector
+                isLoading={locationState.isLoading}
+                error={locationState.error}
+                permissionStatus={locationState.permissionStatus}
+                locationAddress={location.address}
+                latitude={location.latitude}
+                longitude={location.longitude}
+                onDetectLocation={fetchLocation}
               />
-              <p className="mt-2 text-sm text-gray-500">
-                You can edit the auto-detected address or enter it manually
-              </p>
+
+              {/* Full Address */}
+              <FormInput
+                id="fullAddress"
+                name="fullAddress"
+                type="textarea"
+                value={formData.fullAddress}
+                onChange={handleChange}
+                label="Full Address (Street, Locality, City, Pincode)"
+                placeholder="Enter complete address with street, locality, landmark, city, and pincode"
+                rows={4}
+                helperText="You can edit the auto-detected address or enter it manually"
+                required={true}
+              />
             </div>
 
             {/* Submit Button */}
@@ -438,7 +336,7 @@ function UserDetailsPage() {
               type="submit"
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-medium transition-colors"
             >
-              Continue Shopping
+              {formData.name ? "Update Details" : "Continue Shopping"}
             </button>
           </form>
         </div>
@@ -447,7 +345,7 @@ function UserDetailsPage() {
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex gap-3">
             <svg
-              className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"
+              className="w-5 h-5 text-blue-600 shrink-0 mt-0.5"
               fill="currentColor"
               viewBox="0 0 20 20"
             >

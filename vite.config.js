@@ -8,6 +8,7 @@ export default defineConfig({
   base: "/veggi-cart/",
   server: {
     host: true,
+    strictPort: true,
     allowedHosts: [
       "e1bef59488f9.ngrok-free.app",
       ".ngrok-free.app",

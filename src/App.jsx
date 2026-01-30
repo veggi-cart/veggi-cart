@@ -3,20 +3,22 @@ import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
 import UserDetailsPage from "./pages/UserDetailsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Navigate } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/veggi-cart">
       <Routes>
-        <Route path="/user-details" element={<UserDetailsPage />} />
         <Route
-          path="/"
+          index
           element={
             <ProtectedRoute>
               <ProductsPage />
             </ProtectedRoute>
           }
         />
+
+        <Route path="/user-details" element={<UserDetailsPage />} />
         <Route
           path="/cart"
           element={
@@ -25,6 +27,9 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Optional: Redirect any unknown paths back to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
