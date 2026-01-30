@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
+
 import ProductsPage from "./pages/ProductsPage";
 import CartPage from "./pages/CartPage";
 import UserDetailsPage from "./pages/UserDetailsPage";
@@ -7,7 +9,8 @@ import { Navigate } from "react-router-dom";
 
 function App() {
   return (
-    <Router basename="/veggi-cart">
+    // <Router basename="/veggi-cart">
+    <Router>
       <Routes>
         <Route
           index
