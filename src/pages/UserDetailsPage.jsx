@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/common/Header";
 import FormInput from "../components/common/FormInput";
 import LocationDetector from "../components/user/LocationDetector";
+import ServiceUnavailable from "../components/user/ServiceUnavailable";
+import { checkServiceAvailability } from "../utils/locationService";
 
 function UserDetailsPage() {
   const navigate = useNavigate();
@@ -27,6 +29,12 @@ function UserDetailsPage() {
     permissionStatus: null,
   });
 
+  const [serviceAvailability, setServiceAvailability] = useState({
+    isServiceable: true,
+    distance: null,
+    maxDistance: 4,
+  });
+
   useEffect(() => {
     // 1. Load User Details
     const existingDetails = localStorage.getItem("userDetails");
@@ -40,6 +48,15 @@ function UserDetailsPage() {
     if (existingLocation) {
       savedLoc = JSON.parse(existingLocation);
       setLocation(savedLoc);
+
+      // Check service availability for saved location
+      if (savedLoc.latitude && savedLoc.longitude) {
+        const availability = checkServiceAvailability(
+          savedLoc.latitude,
+          savedLoc.longitude,
+        );
+        setServiceAvailability(availability);
+      }
     }
 
     // 3. Check permissions, passing the savedLoc to prevent auto-fetch if data exists
@@ -98,16 +115,23 @@ function UserDetailsPage() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
+
+        // Check service availability FIRST
+        const availability = checkServiceAvailability(latitude, longitude);
+        setServiceAvailability(availability);
+
         try {
           const address = await reverseGeocode(latitude, longitude);
 
           setLocation({ latitude, longitude, address });
 
-          // Update form address only if it's currently empty
-          setFormData((prev) => ({
-            ...prev,
-            fullAddress: prev.fullAddress || address,
-          }));
+          // Update form address only if it's currently empty AND location is serviceable
+          if (availability.isServiceable) {
+            setFormData((prev) => ({
+              ...prev,
+              fullAddress: prev.fullAddress || address,
+            }));
+          }
 
           setLocationState((prev) => ({
             ...prev,
@@ -167,8 +191,29 @@ function UserDetailsPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleRetryLocation = () => {
+    // Clear current location and reset service availability
+    setLocation({
+      latitude: null,
+      longitude: null,
+      address: "",
+    });
+    setServiceAvailability({
+      isServiceable: true,
+      distance: null,
+      maxDistance: 4,
+    });
+    setLocationState({
+      isLoading: false,
+      error: null,
+      permissionStatus: null,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validate required fields
     if (
       !formData.name ||
       !formData.phoneNumber ||
@@ -179,16 +224,26 @@ function UserDetailsPage() {
       return;
     }
 
+    // Check service availability if location is detected
+    if (location.latitude && location.longitude) {
+      if (!serviceAvailability.isServiceable) {
+        alert(
+          "Sorry, we don't deliver to your location yet. Please try a different address within our service area.",
+        );
+        return;
+      }
+    }
+
     localStorage.setItem("userDetails", JSON.stringify(formData));
     localStorage.setItem("userLocation", JSON.stringify(location));
     navigate("/");
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50  pb-20 lg:pb-0">
       <Header showBackButton={true} />
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8  ">
         <div className="mb-8">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
             {formData.name ? `Hello, ${formData.name}! 👋` : "Welcome! 👋"}
@@ -200,87 +255,103 @@ function UserDetailsPage() {
           </p>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <FormInput
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              label="Name"
-              placeholder="Enter your full name"
-              required
+        {/* <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8"> */}
+        <div
+          className={`${!serviceAvailability.isServiceable ? "bg-red-50" : "bg-white"}  rounded-lg border border-gray-200 p-6 sm:p-8`}
+        >
+          {/* Show Service Unavailable if location is out of range */}
+          {location.latitude &&
+          location.longitude &&
+          !serviceAvailability.isServiceable ? (
+            <ServiceUnavailable
+              distance={serviceAvailability.distance}
+              maxDistance={serviceAvailability.maxDistance}
+              onRetry={handleRetryLocation}
             />
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <FormInput
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+                label="Name"
+                placeholder="Enter your full name"
+                required
+              />
 
-            <FormInput
-              id="phoneNumber"
-              name="phoneNumber"
-              type="tel"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              label="Phone Number"
-              placeholder="10-digit mobile number"
-              pattern="[0-9]{10}"
-              required
-            />
+              <FormInput
+                id="phoneNumber"
+                name="phoneNumber"
+                type="tel"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                label="Phone Number"
+                placeholder="10-digit mobile number"
+                pattern="[0-9]{10}"
+                required
+              />
 
-            <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Delivery Address
-              </h3>
+              <div className="border-t border-gray-200 pt-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Delivery Address
+                </h3>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                <FormInput
-                  id="flatNo"
-                  name="flatNo"
-                  type="text"
-                  value={formData.flatNo}
-                  onChange={handleChange}
-                  label="Flat No."
-                  placeholder="e.g., 101"
-                  required
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                  <FormInput
+                    id="flatNo"
+                    name="flatNo"
+                    type="text"
+                    value={formData.flatNo}
+                    onChange={handleChange}
+                    label="Flat No."
+                    placeholder="e.g., 101"
+                    required
+                  />
+                  <FormInput
+                    id="apartmentName"
+                    name="apartmentName"
+                    type="text"
+                    value={formData.apartmentName}
+                    onChange={handleChange}
+                    label="Apartment Name"
+                    placeholder="e.g., Green Valley"
+                    required
+                  />
+                </div>
+
+                <LocationDetector
+                  isLoading={locationState.isLoading}
+                  error={locationState.error}
+                  permissionStatus={locationState.permissionStatus}
+                  locationAddress={location.address}
+                  latitude={location.latitude}
+                  longitude={location.longitude}
+                  onDetectLocation={fetchLocation}
                 />
+
                 <FormInput
-                  id="apartmentName"
-                  name="apartmentName"
-                  type="text"
-                  value={formData.apartmentName}
+                  id="fullAddress"
+                  name="fullAddress"
+                  type="textarea"
+                  value={formData.fullAddress}
                   onChange={handleChange}
-                  label="Apartment Name"
-                  placeholder="e.g., Green Valley"
+                  label="Full Address"
+                  placeholder="Complete address details..."
+                  rows={4}
                   required
                 />
               </div>
 
-              <LocationDetector
-                isLoading={locationState.isLoading}
-                error={locationState.error}
-                permissionStatus={locationState.permissionStatus}
-                locationAddress={location.address}
-                onDetectLocation={fetchLocation}
-              />
-
-              <FormInput
-                id="fullAddress"
-                name="fullAddress"
-                type="textarea"
-                value={formData.fullAddress}
-                onChange={handleChange}
-                label="Full Address"
-                placeholder="Complete address details..."
-                rows={4}
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-medium transition-transform active:scale-95"
-            >
-              {formData.name ? "Update Details" : "Continue Shopping"}
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-medium transition-transform active:scale-95"
+              >
+                {formData.name ? "Update Details" : "Continue Shopping"}
+              </button>
+            </form>
+          )}
         </div>
       </div>
     </div>

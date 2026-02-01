@@ -128,7 +128,7 @@ const LocationDetector = ({
     <div className="mb-4">
       <div className="flex items-center justify-between mb-2">
         <label className="block text-sm font-semibold text-gray-900">
-          Auto-Detect Location <span className="text-gray-400">(Optional)</span>
+          Geo-Location <span className="text-red-500">*</span>
         </label>
         <button
           type="button"
