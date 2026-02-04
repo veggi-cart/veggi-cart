@@ -5,7 +5,8 @@ const SERVICE_CENTER = {
   name: "Bengaluru Service Center",
 };
 
-const SERVICE_RADIUS_KM = 4;
+// const SERVICE_RADIUS_KM = 4;
+const SERVICE_RADIUS_KM = 14;
 
 /**
  * Calculate distance between two coordinates using Haversine formula

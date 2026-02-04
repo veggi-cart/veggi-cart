@@ -47,44 +47,47 @@ import UserDetailsPage from "./pages/UserDetailsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import BottomNavBar from "./components/common/BottomNavBar";
 import { Navigate } from "react-router-dom";
+import { ProductsProvider } from "./context/ProductsContext";
 
 function App() {
   return (
     <Router>
-      <div className="relative min-h-screen">
-        <Routes>
-          <Route
-            index
-            element={
-              <ProtectedRoute>
-                <ProductsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/user-details" element={<UserDetailsPage />} />
-          <Route
-            path="/cart"
-            element={
-              <ProtectedRoute>
-                <CartPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/orders"
-            element={
-              <ProtectedRoute>
-                <OrdersPage />
-              </ProtectedRoute>
-            }
-          />
-          {/* Redirect any unknown paths back to home */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+      <ProductsProvider>
+        <div className="relative min-h-screen">
+          <Routes>
+            <Route
+              index
+              element={
+                <ProtectedRoute>
+                  <ProductsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/user-details" element={<UserDetailsPage />} />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <CartPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <OrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            {/* Redirect any unknown paths back to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
 
-        {/* Bottom Navigation Bar - Shows on all protected routes */}
-        <BottomNavBar />
-      </div>
+          {/* Bottom Navigation Bar - Shows on all protected routes */}
+          <BottomNavBar />
+        </div>
+      </ProductsProvider>
     </Router>
   );
 }
