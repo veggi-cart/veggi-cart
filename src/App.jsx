@@ -10,6 +10,7 @@ import { UserProvider } from "./features/user/context/UserContext";
 import { ProductProvider } from "./features/products/context/ProductContext";
 import { CartProvider } from "./features/cart/context/CartContext";
 import { OrderProvider } from "./features/order/context/OrderContext";
+import { DeliveryConfigProvider } from "./features/delivery/context/DeliveryConfigContext";
 import { ToastProvider } from "./components/ToastProvider";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
 import AppShell from "./components/AppShell";
@@ -77,6 +78,7 @@ function App() {
         <AuthProvider>
           <UserProvider>
             <ProductProvider>
+              <DeliveryConfigProvider>
               <CartProvider>
                 <OrderProvider>
                   <Routes>
@@ -176,6 +178,7 @@ function App() {
                   </Routes>
                 </OrderProvider>
               </CartProvider>
+              </DeliveryConfigProvider>
             </ProductProvider>
           </UserProvider>
         </AuthProvider>

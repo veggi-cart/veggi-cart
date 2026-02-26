@@ -1,20 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart, Tag, TrendingDown, Wallet, Loader2 } from "lucide-react";
 import { useCart } from "../hooks/useCart";
-import {
-  ORDER_ROUTES,
-  FREE_DELIVERY_THRESHOLD,
-  DELIVERY_CHARGE,
-} from "../../../constants/order.constants";
+import { ORDER_ROUTES } from "../../../constants/order.constants";
+import { useDeliveryConfig } from "../../delivery/context/DeliveryConfigContext";
 
 const CartSummary = () => {
   const navigate = useNavigate();
   const { itemCount, totalMrp, totalAmount, totalSavings, loading } = useCart();
+  const { deliveryCharge: deliveryRate, freeDeliveryThreshold } = useDeliveryConfig();
 
   const deliveryCharge =
-    (totalAmount ?? 0) >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
+    (totalAmount ?? 0) >= freeDeliveryThreshold ? 0 : deliveryRate;
   const grandTotal = (totalAmount ?? 0) + deliveryCharge;
-  const amountToFree = FREE_DELIVERY_THRESHOLD - (totalAmount ?? 0);
+  const amountToFree = freeDeliveryThreshold - (totalAmount ?? 0);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm sticky top-6">

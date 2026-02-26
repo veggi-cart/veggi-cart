@@ -1,7 +1,4 @@
-import {
-  FREE_DELIVERY_THRESHOLD,
-  DELIVERY_CHARGE,
-} from "../../../constants/order.constants";
+import { useDeliveryConfig } from "../../delivery/context/DeliveryConfigContext";
 
 /**
  * Reusable order pricing card.
@@ -24,14 +21,16 @@ const OrderSummary = ({
   totalAmount = 0,
   compact = false,
 }) => {
+  const { deliveryCharge: deliveryRate, freeDeliveryThreshold } = useDeliveryConfig();
+
   const charge =
     deliveryCharge !== undefined
       ? deliveryCharge
-      : itemsTotal >= FREE_DELIVERY_THRESHOLD
+      : itemsTotal >= freeDeliveryThreshold
         ? 0
-        : DELIVERY_CHARGE;
+        : deliveryRate;
 
-  const amountToFreeDelivery = FREE_DELIVERY_THRESHOLD - itemsTotal;
+  const amountToFreeDelivery = freeDeliveryThreshold - itemsTotal;
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">

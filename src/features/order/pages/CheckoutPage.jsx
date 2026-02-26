@@ -9,9 +9,8 @@ import OrderSummary from "../components/OrderSummary";
 import {
   PAYMENT_METHOD,
   ORDER_ROUTES,
-  FREE_DELIVERY_THRESHOLD,
-  DELIVERY_CHARGE,
 } from "../../../constants/order.constants";
+import { useDeliveryConfig } from "../../delivery/context/DeliveryConfigContext";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -27,9 +26,10 @@ const CheckoutPage = () => {
   const { createOrder, loading } = useOrder();
 
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHOD.UPI);
+  const { deliveryCharge: deliveryRate, freeDeliveryThreshold } = useDeliveryConfig();
 
   const deliveryCharge =
-    (cartTotal ?? 0) >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_CHARGE;
+    (cartTotal ?? 0) >= freeDeliveryThreshold ? 0 : deliveryRate;
   const grandTotal = (cartTotal ?? 0) + deliveryCharge;
 
   const address = user?.address;
