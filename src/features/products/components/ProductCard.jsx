@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useCart } from "../../cart/hooks/useCart";
 import AddToCartButton from "./AddToCartButton";
 import PriceConfigsBottomSheet from "./PriceConfigsBottomSheet";
 
@@ -7,10 +6,10 @@ import PriceConfigsBottomSheet from "./PriceConfigsBottomSheet";
 //   the parent renders one card per in-cart config with activeConfig set.
 // No activeConfig — none of this product's configs are in cart; show Add.
 const ProductCard = ({ product, activeConfig }) => {
-  const { cart } = useCart();
   const [showSheet, setShowSheet] = useState(false);
 
   const isMultiConfig = product.priceConfigs?.length > 1;
+  const isAvailable = product.available !== false;
 
   // For display: use activeConfig's price, or fall back to the cheapest config
   const displayConfig =
@@ -25,14 +24,14 @@ const ProductCard = ({ product, activeConfig }) => {
       ? ((displayConfig.mrp - displayConfig.price) / displayConfig.mrp) * 100
       : 0;
 
-  const openSheet = () => setShowSheet(true);
+  const openSheet = () => {
+    if (!isAvailable) return;
+    setShowSheet(true);
+  };
 
   return (
     <>
-      <div
-        className={`bg-white rounded-xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all ${isMultiConfig ? "cursor-pointer" : ""}`}
-        onClick={isMultiConfig ? openSheet : undefined}
-      >
+      <div className="bg-white rounded-xl border-2 border-slate-200 overflow-hidden hover:shadow-xl transition-all">
         {/* Image */}
         <div className="relative aspect-square overflow-hidden">
           <img
@@ -41,9 +40,18 @@ const ProductCard = ({ product, activeConfig }) => {
             className="w-full h-full object-cover"
           />
 
-          {discount > 0 && (
+          {discount > 0 && isAvailable && (
             <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
               {discount.toFixed(0)}% OFF
+            </div>
+          )}
+
+          {/* Out of stock overlay */}
+          {!isAvailable && (
+            <div className="absolute inset-0 bg-slate-900/50 flex items-center justify-center">
+              <span className="bg-white text-slate-700 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                Out of Stock
+              </span>
             </div>
           )}
         </div>
@@ -62,7 +70,7 @@ const ProductCard = ({ product, activeConfig }) => {
             )}
           </div>
 
-          <h3 className="font-bold text-slate-800 text-sm mb-1 line-clamp-1">
+          <h3 className="font-bold text-slate-800 text-sm mb-1 line-clamp-2">
             {product.name}
           </h3>
 
@@ -90,17 +98,19 @@ const ProductCard = ({ product, activeConfig }) => {
 
           {/* No activeConfig, single config → direct add/qty ctrl */}
           {!activeConfig && !isMultiConfig && (
-            <AddToCartButton config={product.priceConfigs[0]} product={product} />
+            <AddToCartButton
+              config={product.priceConfigs[0]}
+              product={product}
+              disabled={!isAvailable}
+            />
           )}
 
-          {/* No activeConfig, multi config → "Add" opens sheet */}
+          {/* No activeConfig, multi config → "Add" opens sheet (button only, no card click) */}
           {!activeConfig && isMultiConfig && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                openSheet();
-              }}
-              className="w-full h-10 flex items-center justify-center bg-[#009661] text-white font-bold rounded-xl transition-all active:scale-95 shadow-sm"
+              onClick={openSheet}
+              disabled={!isAvailable}
+              className="w-full h-10 flex items-center justify-center bg-[#009661] text-white font-bold rounded-xl transition-all active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Add
             </button>

@@ -1,13 +1,28 @@
 import { useNavigate } from "react-router-dom";
-import { ShoppingCart, Tag, TrendingDown, Wallet, Loader2 } from "lucide-react";
+import { ShoppingCart, Tag, TrendingDown, Wallet, Loader2, Clock } from "lucide-react";
 import { useCart } from "../hooks/useCart";
 import { ORDER_ROUTES } from "../../../constants/order.constants";
 import { useDeliveryConfig } from "../../delivery/context/DeliveryConfigContext";
 
+const isPastCutoff = (cutoffHour, cutoffMinute) => {
+  const now = new Date();
+  return (
+    now.getHours() > cutoffHour ||
+    (now.getHours() === cutoffHour && now.getMinutes() >= cutoffMinute)
+  );
+};
+
+const fmt12 = (h, m) => {
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hour = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2, "0")} ${ampm}`;
+};
+
 const CartSummary = () => {
   const navigate = useNavigate();
   const { itemCount, totalMrp, totalAmount, totalSavings, loading } = useCart();
-  const { deliveryCharge: deliveryRate, freeDeliveryThreshold } = useDeliveryConfig();
+  const { deliveryCharge: deliveryRate, freeDeliveryThreshold, orderCutoffHour, orderCutoffMinute } = useDeliveryConfig();
+  const ordersClosed = isPastCutoff(orderCutoffHour, orderCutoffMinute);
 
   const deliveryCharge =
     (totalAmount ?? 0) >= freeDeliveryThreshold ? 0 : deliveryRate;
@@ -98,10 +113,20 @@ const CartSummary = () => {
         )}
       </div>
 
+      {/* Cutoff warning */}
+      {ordersClosed && (
+        <div className="mb-4 flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+          <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+          <p className="text-xs font-semibold text-amber-700">
+            Orders are closed for today. Ordering reopens at midnight. Cutoff is {fmt12(orderCutoffHour, orderCutoffMinute)}.
+          </p>
+        </div>
+      )}
+
       {/* Checkout CTA */}
       <button
         onClick={() => navigate(ORDER_ROUTES.CHECKOUT)}
-        disabled={loading || itemCount === 0}
+        disabled={loading || itemCount === 0 || ordersClosed}
         className="w-full py-4 px-6 bg-[#009661] text-white rounded-xl font-bold text-lg
           hover:bg-[#007d51] transition-all shadow-lg shadow-emerald-100
           active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed
@@ -109,6 +134,8 @@ const CartSummary = () => {
       >
         {loading ? (
           <Loader2 className="w-5 h-5 animate-spin" />
+        ) : ordersClosed ? (
+          "Orders Closed"
         ) : (
           "Proceed to Checkout"
         )}
@@ -121,7 +148,7 @@ const CartSummary = () => {
   );
 };
 
-// Inline SVG Package icon (same as original)
+// Inline SVG Package icon
 const Package = ({ className }) => (
   <svg
     className={className}

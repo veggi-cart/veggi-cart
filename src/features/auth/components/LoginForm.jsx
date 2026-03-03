@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { validateLoginForm } from "../utils/validation";
 
 const LoginForm = ({ onSubmit, loading }) => {
@@ -64,16 +65,16 @@ const LoginForm = ({ onSubmit, loading }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {/* Login method toggle */}
-      <div className="flex rounded-lg overflow-hidden border border-gray-300">
+      <div className="flex rounded-xl overflow-hidden border border-slate-200">
         <button
           type="button"
           onClick={() => handleLoginMethodChange("email")}
-          className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
+          className={`flex-1 py-2.5 px-4 text-sm font-semibold transition-colors ${
             formData.loginWith === "email"
-              ? "bg-indigo-600 text-white"
-              : "bg-white text-gray-700 hover:bg-gray-50"
+              ? "bg-[#009661] text-white"
+              : "bg-slate-50 text-slate-600 hover:bg-slate-100"
           }`}
         >
           Email
@@ -81,10 +82,10 @@ const LoginForm = ({ onSubmit, loading }) => {
         <button
           type="button"
           onClick={() => handleLoginMethodChange("phone")}
-          className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
+          className={`flex-1 py-2.5 px-4 text-sm font-semibold transition-colors ${
             formData.loginWith === "phone"
-              ? "bg-indigo-600 text-white"
-              : "bg-white text-gray-700 hover:bg-gray-50"
+              ? "bg-[#009661] text-white"
+              : "bg-slate-50 text-slate-600 hover:bg-slate-100"
           }`}
         >
           Phone
@@ -96,7 +97,7 @@ const LoginForm = ({ onSubmit, loading }) => {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1.5"
           >
             Email Address
           </label>
@@ -106,10 +107,10 @@ const LoginForm = ({ onSubmit, loading }) => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
+            className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#009661] focus:border-transparent transition-colors ${
               errors.email || errors.identifier
                 ? "border-red-500"
-                : "border-gray-300"
+                : "border-slate-200"
             }`}
             placeholder="your@email.com"
           />
@@ -123,7 +124,7 @@ const LoginForm = ({ onSubmit, loading }) => {
         <div>
           <label
             htmlFor="phoneNumber"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-gray-700 mb-1.5"
           >
             Phone Number
           </label>
@@ -134,10 +135,10 @@ const LoginForm = ({ onSubmit, loading }) => {
             value={formData.phoneNumber}
             onChange={handleChange}
             maxLength={10}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
+            className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#009661] focus:border-transparent transition-colors ${
               errors.phoneNumber || errors.identifier
                 ? "border-red-500"
-                : "border-gray-300"
+                : "border-slate-200"
             }`}
             placeholder="10-digit phone number"
           />
@@ -153,7 +154,7 @@ const LoginForm = ({ onSubmit, loading }) => {
       <div>
         <label
           htmlFor="password"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-medium text-gray-700 mb-1.5"
         >
           Password
         </label>
@@ -164,50 +165,20 @@ const LoginForm = ({ onSubmit, loading }) => {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.password ? "border-red-500" : "border-gray-300"
+            className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#009661] focus:border-transparent transition-colors ${
+              errors.password ? "border-red-500" : "border-slate-200"
             }`}
             placeholder="Enter your password"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
           >
             {showPassword ? (
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                />
-              </svg>
+              <EyeOff className="w-5 h-5" />
             ) : (
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
+              <Eye className="w-5 h-5" />
             )}
           </button>
         </div>
@@ -220,7 +191,7 @@ const LoginForm = ({ onSubmit, loading }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-[#009661] text-white py-3 px-4 rounded-xl font-bold hover:bg-[#007d51] focus:outline-none focus:ring-2 focus:ring-[#009661] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? "Logging in..." : "Login"}
       </button>

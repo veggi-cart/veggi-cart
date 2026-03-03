@@ -59,12 +59,12 @@ const OrdersListPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-8 px-4">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-teal-50 to-cyan-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/products")}
             className="p-2 rounded-xl hover:bg-white/80 transition-colors"
           >
             <ArrowLeft className="w-5 h-5 text-slate-600" />
@@ -72,13 +72,13 @@ const OrdersListPage = () => {
           <h1 className="text-2xl font-black text-slate-900">My Orders</h1>
         </div>
 
-        {/* Filter tabs */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-5 scrollbar-hide">
+        {/* Filter tabs — horizontal scroll with snap */}
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-5 scrollbar-hide snap-x snap-mandatory" style={{ WebkitOverflowScrolling: "touch" }}>
           {FILTER_TABS.map((tab) => (
             <button
               key={tab.key}
               onClick={() => handleTabChange(tab.key)}
-              className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all border
+              className={`snap-start shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-all border
                 ${
                   activeTab === tab.key
                     ? "bg-[#009661] text-white border-[#009661] shadow-sm"
@@ -93,7 +93,7 @@ const OrdersListPage = () => {
         {/* Error */}
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3 flex items-center gap-3 text-red-700">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <AlertCircle className="w-4 h-4 shrink-0" />
             <span className="text-sm font-medium">{error}</span>
           </div>
         )}

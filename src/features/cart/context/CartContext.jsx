@@ -12,27 +12,23 @@ import { useApiCall } from "../../../api/use.apiCall";
 export const CartContext = createContext(null);
 
 export const CartProvider = ({ children }) => {
-  const { isAuthenticated, isApproved } = useAuth();
+  const { isAuthenticated } = useAuth();
+
   const [cart, setCart] = useState(null);
 
   const { execute: runFetchCart, loading: fetchLoading } = useApiCall(
     cartAPI.getCart,
-    { silent: true }, // background fetch — don't toast on error
+    { silent: true },
   );
 
-  const { execute: runAddItem, loading: addLoading, error: addError } = useApiCall(
-    cartAPI.addItem,
-    // { successMessage: "Item added to cart!" },
-  );
+  const { execute: runAddItem, loading: addLoading, error: addError } =
+    useApiCall(cartAPI.addItem);
 
-  const { execute: runUpdateQuantity, loading: updateLoading, error: updateError } = useApiCall(
-    cartAPI.updateItemQuantity,
-  );
+  const { execute: runUpdateQuantity, loading: updateLoading, error: updateError } =
+    useApiCall(cartAPI.updateItemQuantity);
 
-  const { execute: runRemoveItem, loading: removeLoading, error: removeError } = useApiCall(
-    cartAPI.removeItem,
-    // { successMessage: "Item removed." },
-  );
+  const { execute: runRemoveItem, loading: removeLoading, error: removeError } =
+    useApiCall(cartAPI.removeItem);
 
   const { execute: runClearCart, loading: clearLoading } = useApiCall(
     cartAPI.clearCart,
@@ -40,25 +36,23 @@ export const CartProvider = ({ children }) => {
   );
 
   const loading =
-    fetchLoading ||
-    addLoading ||
-    updateLoading ||
-    removeLoading ||
-    clearLoading;
+    fetchLoading || addLoading || updateLoading || removeLoading || clearLoading;
 
-  // Most recent mutation error (add/update/remove) — used for inline display in CartPage
-  const error = addError?.message || updateError?.message || removeError?.message || null;
+  const error =
+    addError?.message || updateError?.message || removeError?.message || null;
 
   // ── Actions ──────────────────────────────────────────────────────────────
 
   const fetchCart = useCallback(async () => {
-    if (!isAuthenticated || !isApproved) {
+    if (!isAuthenticated) {
       setCart(null);
       return;
     }
     const response = await runFetchCart();
-    if (response?.success) setCart(response.data);
-  }, [isAuthenticated, isApproved, runFetchCart]);
+    if (response?.success) {
+      setCart(response.data);
+    }
+  }, [isAuthenticated, runFetchCart]);
 
   useEffect(() => {
     fetchCart();
@@ -103,8 +97,8 @@ export const CartProvider = ({ children }) => {
     (pid, cid) =>
       cart?.items?.find(
         (item) =>
-          (item.productId?._id === pid || item.productId === pid) &&
-          item.priceConfigId === cid,
+          (item.productId?._id ?? item.productId)?.toString() === pid?.toString() &&
+          item.priceConfigId?.toString() === cid?.toString(),
       ) ?? null,
     [cart],
   );
@@ -114,17 +108,19 @@ export const CartProvider = ({ children }) => {
     [getCartItem],
   );
 
-  // ── Computed totals ──────────────────────────────────────────────────────
+  // ── Computed totals ───────────────────────────────────────────────────────
 
   const totals = useMemo(() => {
-    if (!cart?.items) {
+    if (!cart?.items?.length) {
       return { totalAmount: 0, totalMrp: 0, totalSavings: 0, itemCount: 0 };
     }
 
     return cart.items.reduce(
       (acc, item) => {
         const config = item.productId?.priceConfigs?.find(
-          (c) => c._id === item.priceConfigId || c.id === item.priceConfigId,
+          (c) =>
+            c._id?.toString() === item.priceConfigId?.toString() ||
+            c.id?.toString() === item.priceConfigId?.toString(),
         );
         if (config) {
           acc.totalAmount += config.price * item.quantity;

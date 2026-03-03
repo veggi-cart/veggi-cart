@@ -4,8 +4,8 @@ import authAPI from "../../../api/endpoints/auth.api";
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(authAPI.getToken());
+  const [user, setUser] = useState(authAPI.getCurrentUser);
+  const [token, setToken] = useState(authAPI.getToken);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -73,6 +73,17 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setToken(null);
     setError(null);
+  }, []);
+
+  // ── Handle 401 from apiClient (token expired / invalid) ────────────────
+  useEffect(() => {
+    const handle401 = () => {
+      setUser(null);
+      setToken(null);
+      setError(null);
+    };
+    window.addEventListener("auth:logout", handle401);
+    return () => window.removeEventListener("auth:logout", handle401);
   }, []);
 
   const value = {

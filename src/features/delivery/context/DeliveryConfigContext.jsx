@@ -2,7 +2,14 @@ import { createContext, useContext, useState, useEffect } from "react";
 import apiClient from "../../../api/api.client";
 
 // Fallback values — used while fetching or if the request fails
-const DEFAULTS = { deliveryCharge: 40, freeDeliveryThreshold: 500 };
+const DEFAULTS = {
+  deliveryCharge: 40,
+  freeDeliveryThreshold: 500,
+  orderCutoffHour: 23,
+  orderCutoffMinute: 0,
+  deliveryByHour: 7,
+  deliveryByMinute: 30,
+};
 
 const DeliveryConfigContext = createContext(DEFAULTS);
 
@@ -13,10 +20,17 @@ export const DeliveryConfigProvider = ({ children }) => {
     apiClient
       .get("/settings")
       .then((res) => {
-        const { deliveryCharge, freeDeliveryThreshold } = res.data?.data ?? {};
-        if (deliveryCharge != null && freeDeliveryThreshold != null) {
-          setConfig({ deliveryCharge, freeDeliveryThreshold });
-        }
+        const data = res.data?.data ?? {};
+        // Merge only keys present in the response, keep defaults for anything missing
+        setConfig((prev) => ({
+          ...prev,
+          ...(data.deliveryCharge != null && { deliveryCharge: data.deliveryCharge }),
+          ...(data.freeDeliveryThreshold != null && { freeDeliveryThreshold: data.freeDeliveryThreshold }),
+          ...(data.orderCutoffHour != null && { orderCutoffHour: data.orderCutoffHour }),
+          ...(data.orderCutoffMinute != null && { orderCutoffMinute: data.orderCutoffMinute }),
+          ...(data.deliveryByHour != null && { deliveryByHour: data.deliveryByHour }),
+          ...(data.deliveryByMinute != null && { deliveryByMinute: data.deliveryByMinute }),
+        }));
       })
       .catch(() => {
         // Keep defaults silently — non-critical

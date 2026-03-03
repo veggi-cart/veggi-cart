@@ -31,13 +31,14 @@ const ProductsPage = () => {
 
       const cartItems =
         cart?.items?.filter(
-          (item) => (item.productId?._id ?? item.productId) === product._id,
+          (item) =>
+            (item.productId?._id ?? item.productId)?.toString() === product._id?.toString(),
         ) ?? [];
 
       if (cartItems.length > 0) {
         return cartItems.map((item) => {
           const config = product.priceConfigs.find(
-            (c) => c._id === item.priceConfigId,
+            (c) => c._id?.toString() === item.priceConfigId?.toString(),
           );
           return (
             <ProductCard
@@ -51,6 +52,7 @@ const ProductsPage = () => {
 
       return [<ProductCard key={product._id} product={product} />];
     });
+
   const categories = getCategories();
 
   const handleCategoryChange = (category) => {
@@ -66,6 +68,10 @@ const ProductsPage = () => {
   const handleAvailableToggle = () => {
     updateFilters({ availableOnly: !filters.availableOnly });
   };
+
+  // Only non-category filters count for the badge (categories are always visible)
+  const hasNonCategoryFilters =
+    filters.searchQuery || !filters.availableOnly;
 
   const hasActiveFilters =
     filters.category || filters.searchQuery || !filters.availableOnly;
@@ -112,9 +118,9 @@ const ProductsPage = () => {
           ></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
-          <div className="text-center mb-8 md:mb-10">
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
+          <div className="text-center mb-6 md:mb-8">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-white mb-3 tracking-tight">
               Fresh <span className="text-emerald-200">Products</span>
             </h1>
             <p className="text-sm sm:text-base md:text-lg text-emerald-50/90 max-w-xl mx-auto font-medium">
@@ -125,7 +131,7 @@ const ProductsPage = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="max-w-xl mx-auto mt-8 md:mt-10 px-2">
+          <div className="max-w-xl mx-auto px-2">
             <div className="relative group">
               <div className="absolute -inset-1 bg-white/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
               <div className="relative">
@@ -139,11 +145,11 @@ const ProductsPage = () => {
                   placeholder="Search for fresh vegetables..."
                   value={filters.searchQuery}
                   onChange={handleSearchChange}
-                  className="w-full bg-white pl-14 pr-6 py-4 md:py-5 rounded-2xl text-slate-800 placeholder:text-slate-400
+                  className="w-full bg-white pl-14 pr-6 py-4 rounded-2xl text-slate-800 placeholder:text-slate-400
                  outline-none border-none shadow-2xl transition-all duration-300
                  hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)]
                  focus:ring-4 focus:ring-emerald-400/40 focus:scale-[1.01]
-                 text-base md:text-lg font-medium"
+                 text-base font-medium"
                 />
               </div>
             </div>
@@ -154,9 +160,37 @@ const ProductsPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+
+        {/* Category chips — always visible, horizontally scrollable */}
+        <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide" style={{ WebkitOverflowScrolling: "touch" }}>
+          <button
+            onClick={() => updateFilters({ category: null })}
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
+              !filters.category
+                ? "bg-[#009661] text-white border-[#009661] shadow-sm"
+                : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+            }`}
+          >
+            All
+          </button>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryChange(category)}
+              className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold capitalize border transition-all ${
+                filters.category === category
+                  ? "bg-[#009661] text-white border-[#009661] shadow-sm"
+                  : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
         {/* Filter Bar */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <h2 className="text-xl md:text-2xl font-bold text-slate-800">
               {filters.category ? (
@@ -170,60 +204,28 @@ const ProductsPage = () => {
             </span>
           </div>
 
-          {/* Filter Button */}
+          {/* Filter Button — only for available-only toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
-              showFilters || hasActiveFilters
+              showFilters || hasNonCategoryFilters
                 ? "bg-emerald-100 text-emerald-700 border-2 border-emerald-300"
                 : "bg-white text-slate-600 border-2 border-slate-200 hover:border-slate-300"
             }`}
           >
             <SlidersHorizontal className="w-5 h-5" />
             <span className="hidden sm:inline">Filters</span>
-            {hasActiveFilters && !showFilters && (
+            {hasNonCategoryFilters && !showFilters && (
               <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
             )}
           </button>
         </div>
 
-        {/* Filter Panel */}
+        {/* Filter Panel — only shows Available Only toggle */}
         {showFilters && (
-          <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 md:p-6 mb-6 shadow-lg animate-slide-down">
-            {/* Categories */}
-            <div className="mb-5">
-              <h3 className="text-sm font-semibold text-slate-700 mb-3">
-                Categories
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => updateFilters({ category: null })}
-                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                    !filters.category
-                      ? "bg-emerald-600 text-white shadow-lg shadow-emerald-200"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                  }`}
-                >
-                  All
-                </button>
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => handleCategoryChange(category)}
-                    className={`px-4 py-2 rounded-xl text-sm font-medium capitalize transition-all ${
-                      filters.category === category
-                        ? "bg-emerald-600 text-white shadow-lg shadow-emerald-200"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-
+          <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 md:p-6 mb-4 shadow-lg animate-slide-down">
             {/* Available Only Toggle */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-4">
               <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -251,7 +253,7 @@ const ProductsPage = () => {
                 onClick={() => setShowFilters(false)}
                 className="flex-1 px-4 py-2.5 bg-linear-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-medium hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg shadow-emerald-200"
               >
-                Apply Filters
+                Apply
               </button>
             </div>
           </div>
@@ -286,22 +288,6 @@ const ProductsPage = () => {
           </div>
         )}
       </div>
-
-      <style jsx>{`
-        @keyframes slide-down {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slide-down {
-          animation: slide-down 0.2s ease-out;
-        }
-      `}</style>
     </div>
   );
 };

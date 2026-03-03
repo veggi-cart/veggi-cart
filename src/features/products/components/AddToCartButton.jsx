@@ -14,8 +14,8 @@ const AddToCartButton = ({
   const cartItem = getCartItem(product._id, config?._id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
-  // Constants to ensure both views are identical in size
-  const containerStyles = compact ? "w-30 h-8 text-sm" : "w-38 h-10 text-base";
+  const heightClass = compact ? "h-8" : "h-10";
+  const textClass = compact ? "text-xs" : "text-sm";
 
   const handleAdd = async (e) => {
     e.stopPropagation();
@@ -53,7 +53,7 @@ const AddToCartButton = ({
         <button
           onClick={handleAdd}
           disabled={isUpdating}
-          className={`flex items-center justify-center bg-[#009661] text-white font-bold rounded-xl transition-all active:scale-95 disabled:opacity-70 shadow-sm ${containerStyles}`}
+          className={`w-full flex items-center justify-center bg-[#009661] text-white font-bold rounded-xl transition-all active:scale-95 disabled:opacity-70 shadow-sm ${heightClass} ${textClass}`}
         >
           {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Add"}
         </button>
@@ -64,7 +64,7 @@ const AddToCartButton = ({
   return (
     <div className="w-full flex justify-center">
       <div
-        className={`flex items-center justify-between bg-[#009661] relative rounded-xl p-1 shadow-sm transition-all ${containerStyles}`}
+        className={`w-full flex items-center justify-between bg-[#009661] relative rounded-xl p-1 shadow-sm transition-all ${heightClass}`}
       >
         {isUpdating && (
           <div className="absolute inset-0 bg-[#009661]/40 backdrop-blur-[1px] rounded-xl flex items-center justify-center z-10">
@@ -81,18 +81,8 @@ const AddToCartButton = ({
           <Minus className="w-4 h-4" strokeWidth={3} />
         </button>
 
-        {/* Quantity & Unit */}
-        {/* <div className="flex flex-col items-center justify-center leading-none">
-          <span className="text-white font-bold tabular-nums">{quantity}</span>
-          {config?.unit && (
-            <span className="text-[9px] text-white uppercase font-bold tracking-tighter">
-              {config.unit}
-            </span>
-          )}
-        </div> */}
-
         <div>
-          <span className="text-white text-xs font-medium">
+          <span className={`text-white font-medium ${textClass}`}>
             {quantity + " x " + config?.displayLabel}
           </span>
         </div>

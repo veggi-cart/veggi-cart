@@ -17,9 +17,7 @@ const CartItem = ({ item }) => {
   if (!product || !config) return null;
 
   const handleRemove = async () => {
-    if (window.confirm(`Remove ${product.name} from cart?`)) {
-      await removeItem(item._id);
-    }
+    await removeItem(item._id);
   };
 
   // Calculations
@@ -32,7 +30,7 @@ const CartItem = ({ item }) => {
     <div className="bg-white rounded-xl border-2 border-slate-200 p-3 sm:p-5 hover:shadow-md transition-all group relative overflow-hidden">
       <div className="flex gap-4">
         {/* Product Image */}
-        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-slate-50 flex-shrink-0 border border-slate-100">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-slate-50 shrink-0 border border-slate-100">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
@@ -58,7 +56,7 @@ const CartItem = ({ item }) => {
               </p>
             </div>
 
-            {/* Simple Remove Icon */}
+            {/* Remove Icon — always visible on mobile, hover-only on desktop */}
             <button
               onClick={handleRemove}
               disabled={globalLoading}
@@ -89,12 +87,11 @@ const CartItem = ({ item }) => {
               )}
             </div>
 
-            {/* Reusing your AddToCartButton for Quantity Controls */}
+            {/* Reusing AddToCartButton for Quantity Controls */}
             <div className="scale-90 origin-right sm:scale-100">
               <AddToCartButton
                 product={product}
                 config={config}
-                // compact={true}
               />
             </div>
           </div>

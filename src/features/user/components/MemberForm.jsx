@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { User, Calendar, Activity } from "lucide-react";
 
 const BELLY_SIZE_OPTIONS = [
-  { value: "Small", label: "Small", emoji: "🟢" },
-  { value: "Medium", label: "Medium", emoji: "🟡" },
-  { value: "Large", label: "Large", emoji: "🔴" },
-  { value: "Extra-Large", label: "Extra Large", emoji: "🟣" },
+  { value: "small", label: "Small", emoji: "🟢" },
+  { value: "standard", label: "Standard", emoji: "🟡" },
+  { value: "hearty", label: "Hearty", emoji: "🔴" },
 ];
 
 const MemberForm = ({ initialData, onSubmit, onCancel, loading }) => {

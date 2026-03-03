@@ -31,7 +31,7 @@ const PaymentProcessingPage = () => {
     startedRef.current = true;
 
     pollOrderStatus(orderId, {
-      onUpdate: (data) => {
+      onUpdate: () => {
         setAttempt((a) => a + 1);
       },
       onSuccess: async () => {
@@ -49,7 +49,8 @@ const PaymentProcessingPage = () => {
     });
 
     return () => stopPolling();
-  }, [orderId, navigate, pollOrderStatus, stopPolling]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderId]);
 
   // ── No orderId — shouldn't happen but handle gracefully ─────────────────
   if (!orderId) {

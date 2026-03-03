@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
   User,
   Package,
-  Menu,
-  X,
   LogOut,
   ClipboardList,
 } from "lucide-react";
@@ -17,7 +14,6 @@ const AppShell = ({ children }) => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const { itemCount } = useCart();
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -109,38 +105,17 @@ const AppShell = ({ children }) => {
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl font-black text-[#009661]">FreshMart</span>
           </Link>
-          <button
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="p-2 rounded-lg text-slate-600"
-          >
-            {showMobileMenu ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
 
-        {/* Mobile dropdown menu */}
-        {showMobileMenu && (
-          <div className="absolute top-14 left-0 w-full bg-white border-b border-slate-200 p-4 animate-slide-down shadow-xl z-50">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-[#009661] text-white flex items-center justify-center font-bold text-lg">
-                {user?.fullName?.charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <p className="font-bold text-slate-800">{user?.fullName}</p>
-                <p className="text-xs text-slate-500">{user?.email}</p>
-              </div>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 text-red-600 font-bold w-full p-2"
-            >
-              <LogOut className="w-5 h-5" /> Logout
-            </button>
-          </div>
-        )}
+          {/* Cart icon with badge — quick access from top header */}
+          <Link to="/cart" className="relative p-2 rounded-lg text-slate-600">
+            <ShoppingCart className="w-6 h-6" />
+            {itemCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-black rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center border-2 border-white shadow-sm">
+                {itemCount > 9 ? "9+" : itemCount}
+              </span>
+            )}
+          </Link>
+        </div>
       </header>
 
       {/* ── Page content ─────────────────────────────────────────────────── */}
@@ -177,7 +152,7 @@ const AppShell = ({ children }) => {
                   )}
                 </div>
                 <span
-                  className={`text-[10px] uppercase tracking-widest font-bold ${
+                  className={`text-[11px] font-semibold ${
                     active ? "opacity-100" : "opacity-60"
                   }`}
                 >
@@ -188,14 +163,6 @@ const AppShell = ({ children }) => {
           })}
         </div>
       </nav>
-
-      <style>{`
-        @keyframes slide-down {
-          from { opacity: 0; transform: translateY(-10px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .animate-slide-down { animation: slide-down 0.2s ease-out; }
-      `}</style>
     </div>
   );
 };

@@ -41,13 +41,6 @@ export const ToastProvider = ({ children, duration = 4000 }) => {
     return errorBus.subscribe(({ message, type }) => addToast(message, type));
   }, [addToast]);
 
-  // Handle the auth:logout event fired by apiClient on 401
-  useEffect(() => {
-    const handleLogout = () => window.location.replace("/login");
-    window.addEventListener("auth:logout", handleLogout);
-    return () => window.removeEventListener("auth:logout", handleLogout);
-  }, []);
-
   return (
     <ToastContext.Provider value={{ addToast, dismiss }}>
       {children}

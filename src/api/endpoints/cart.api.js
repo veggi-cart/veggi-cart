@@ -7,7 +7,6 @@ const cartAPI = {
   },
 
   addItem: async (productId, priceConfigId, quantity = 1) => {
-    // Corrected to use productId
     const response = await apiClient.post("/cart/items", {
       productId,
       priceConfigId,
@@ -29,7 +28,6 @@ const cartAPI = {
   },
 
   clearCart: async () => {
-    // Aligned with the suggestion to clear items
     const response = await apiClient.delete("/cart/items");
     return response.data;
   },

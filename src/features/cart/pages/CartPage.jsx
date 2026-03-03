@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
+import { useDeliveryConfig } from "../../delivery/context/DeliveryConfigContext";
 import CartItem from "../components/CartItem";
 import CartSummary from "../components/CartSummary";
-import { ShoppingCart, ArrowLeft, AlertCircle, Trash2 } from "lucide-react";
+import { ShoppingCart, AlertCircle, Trash2 } from "lucide-react";
+import { ORDER_ROUTES } from "../../../constants/order.constants";
 
 const CartPage = () => {
   const navigate = useNavigate();
@@ -10,53 +13,78 @@ const CartPage = () => {
     cart,
     loading,
     error,
-    updateQuantity,
-    removeItem,
     clearCart,
-    isEmpty,
     itemCount,
+    totalAmount,
+    isEmpty,
   } = useCart();
 
-  const handleClearCart = async () => {
-    if (window.confirm("Are you sure you want to clear your entire cart?")) {
-      await clearCart();
-    }
+  const { deliveryCharge: deliveryRate, freeDeliveryThreshold } =
+    useDeliveryConfig();
+
+  const deliveryCharge = (totalAmount ?? 0) >= freeDeliveryThreshold ? 0 : deliveryRate;
+  const grandTotal = (totalAmount ?? 0) + deliveryCharge;
+
+  const [confirmClear, setConfirmClear] = useState(false);
+
+  const handleClearConfirm = async () => {
+    setConfirmClear(false);
+    await clearCart();
   };
 
-  if (!cart && loading) {
+  if (isEmpty && loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-emerald-600 mx-auto" />
-          <p className="mt-6 text-slate-600 font-medium text-lg">
-            Loading your cart…
-          </p>
+          <p className="mt-6 text-slate-600 font-medium text-lg">Loading your cart…</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-8 px-4">
+    <div className="min-h-screen bg-slate-50 py-6 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex items-center justify-between">
-            <p className="text-slate-600">
-              {isEmpty
-                ? "Your cart is empty"
-                : `You have ${itemCount} ${itemCount === 1 ? "item" : "items"} ready for checkout`}
-            </p>
+            <div>
+              <h1 className="text-2xl font-black text-slate-900">My Cart</h1>
+              <p className="text-sm text-slate-500 mt-0.5">
+                {isEmpty
+                  ? "Your cart is empty"
+                  : `${itemCount} ${itemCount === 1 ? "item" : "items"} in your cart`}
+              </p>
+            </div>
 
-            {!isEmpty && (
+            {!isEmpty && !confirmClear && (
               <button
-                onClick={handleClearCart}
+                onClick={() => setConfirmClear(true)}
                 disabled={loading}
-                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-medium"
+                className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors font-medium text-sm"
               >
                 <Trash2 className="w-4 h-4" />
-                Clear
+                Clear Cart
               </button>
+            )}
+
+            {confirmClear && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-slate-600 font-medium">Clear cart?</span>
+                <button
+                  onClick={handleClearConfirm}
+                  className="px-3 py-1.5 bg-red-500 text-white text-sm font-semibold rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  Yes, clear
+                </button>
+                <button
+                  onClick={() => setConfirmClear(false)}
+                  className="px-3 py-1.5 bg-slate-100 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-200 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -64,7 +92,7 @@ const CartPage = () => {
         {/* Global error */}
         {error && (
           <div className="mb-6 bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+            <AlertCircle className="w-5 h-5 shrink-0" />
             <span className="font-medium">{error}</span>
           </div>
         )}
@@ -75,12 +103,9 @@ const CartPage = () => {
             <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-6">
               <ShoppingCart className="w-12 h-12 text-slate-400" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-800 mb-2">
-              Your cart is empty
-            </h2>
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">Your cart is empty</h2>
             <p className="text-slate-600 mb-8">
-              Looks like you haven&apos;t added anything yet. Start exploring
-              our fresh ingredients!
+              Add some fresh products to get started.
             </p>
             <button
               onClick={() => navigate("/products")}
@@ -94,23 +119,30 @@ const CartPage = () => {
             {/* Items */}
             <div className="lg:col-span-2 space-y-4">
               {cart?.items?.map((item) => (
-                <CartItem
-                  key={item._id}
-                  item={item}
-                  onUpdateQuantity={updateQuantity}
-                  onRemove={removeItem}
-                  loading={loading}
-                />
+                <CartItem key={item._id} item={item} />
               ))}
             </div>
 
-            {/* Summary — self-contained, navigates to checkout internally */}
+            {/* Summary */}
             <div className="lg:col-span-1">
               <CartSummary />
             </div>
           </div>
         )}
       </div>
+
+      {/* Mobile sticky checkout bar */}
+      {!isEmpty && (
+        <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30 bg-white border-t border-slate-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+          <button
+            onClick={() => navigate(ORDER_ROUTES.CHECKOUT)}
+            className="w-full py-3.5 bg-[#009661] text-white rounded-xl font-bold text-base flex items-center justify-between px-5"
+          >
+            <span>{itemCount} {itemCount === 1 ? "item" : "items"}</span>
+            <span>Checkout · ₹{grandTotal.toFixed(2)}</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

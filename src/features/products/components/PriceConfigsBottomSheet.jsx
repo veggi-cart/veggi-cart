@@ -17,7 +17,10 @@ const PriceConfigsBottomSheet = ({ product, onClose }) => {
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
 
       {/* Sheet */}
-      <div className="relative bg-white w-full max-w-lg rounded-t-3xl animate-slide-up shadow-2xl max-h-[80vh] flex flex-col">
+      <div
+        className="relative bg-white w-full max-w-lg rounded-t-3xl animate-slide-up shadow-2xl max-h-[80vh] flex flex-col"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
         {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-1 shrink-0">
           <div className="w-10 h-1 bg-slate-300 rounded-full" />
@@ -38,7 +41,7 @@ const PriceConfigsBottomSheet = ({ product, onClose }) => {
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl hover:bg-slate-100 transition-colors shrink-0"
+            className="p-2.5 rounded-xl hover:bg-slate-100 transition-colors shrink-0"
           >
             <X className="w-5 h-5 text-slate-500" />
           </button>
@@ -55,13 +58,12 @@ const PriceConfigsBottomSheet = ({ product, onClose }) => {
             return (
               <div
                 key={config._id}
-                className="flex items-center gap-3 py-3 border-b border-slate-100 last:border-0"
+                className="flex items-center gap-3 py-4 border-b border-slate-100 last:border-0"
               >
                 {/* Label + price */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-semibold text-slate-800">
-                      {/* {config.val} {config.unit} */}
                       {config.displayLabel}
                     </span>
                     {discount > 0 && (

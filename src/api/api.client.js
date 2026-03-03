@@ -34,11 +34,15 @@ apiClient.interceptors.response.use(
       message = data?.message || message;
 
       if (status === 401) {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("user");
-        // Let the auth context react to this instead of hard-redirecting,
-        // so the toast can still fire before navigation.
-        window.dispatchEvent(new Event("auth:logout"));
+        // Only treat as session expiry if the request actually had a token.
+        // A 401 on a public endpoint (e.g. /settings when unauthenticated)
+        // should not clear auth state or trigger a logout event.
+        const hadToken = !!error.config?.headers?.Authorization;
+        if (hadToken) {
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("user");
+          window.dispatchEvent(new Event("auth:logout"));
+        }
       }
 
       if (status === 403) {

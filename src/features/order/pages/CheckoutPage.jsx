@@ -58,9 +58,9 @@ const CheckoutPage = () => {
     const result = await createOrder(paymentMethod);
     if (!result.success) return; // error already toasted by context
 
-    // COD — clear cart then go to success page
+    // COD — backend already cleared cart; just navigate
     if (result.isCod) {
-      await clearCart();
+      clearCart();
       navigate(ORDER_ROUTES.ORDER_SUCCESS, {
         state: { orderId: result.order.orderId, isCod: true },
       });
@@ -104,7 +104,7 @@ const CheckoutPage = () => {
     cart?.items?.map((item) => {
       const product = item.productId;
       const config = product?.priceConfigs?.find(
-        (c) => c._id === item.priceConfigId || c.id === item.priceConfigId,
+        (c) => c._id?.toString() === item.priceConfigId?.toString(),
       );
       return {
         _id: item._id,

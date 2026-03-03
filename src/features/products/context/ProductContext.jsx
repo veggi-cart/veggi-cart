@@ -1,12 +1,10 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import productsApi from "../../../api/endpoints/products.api";
-import useAuth from "../../auth/hooks/useAuth";
 import { useApiCall } from "../../../api/use.apiCall";
 
 export const ProductContext = createContext(null);
 
 export const ProductProvider = ({ children }) => {
-  const { isAuthenticated } = useAuth();
   const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState({
     category: null,
@@ -27,10 +25,9 @@ export const ProductProvider = ({ children }) => {
   // ── Actions ──────────────────────────────────────────────────────────────
 
   const fetchProducts = useCallback(async () => {
-    if (!isAuthenticated) return;
     const response = await runGetAll();
     if (response?.data) setProducts(response.data);
-  }, [isAuthenticated, runGetAll]);
+  }, [runGetAll]);
 
   const getProductById = useCallback(
     async (id) => {

@@ -4,42 +4,30 @@ const AUTH_BASE = "/auth";
 
 const authAPI = {
   register: async (userData) => {
-    try {
-      const response = await apiClient.post(`${AUTH_BASE}/register`, userData);
+    const response = await apiClient.post(`${AUTH_BASE}/register`, userData);
 
-      // Store token and user data
-      if (response.data.success && response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-      }
-
-      return response.data;
-    } catch (error) {
-      throw error;
+    if (response.data.success && response.data.token) {
+      localStorage.setItem("authToken", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.data));
     }
+
+    return response.data;
   },
 
   login: async (credentials) => {
-    try {
-      const response = await apiClient.post(`${AUTH_BASE}/login`, credentials);
+    const response = await apiClient.post(`${AUTH_BASE}/login`, credentials);
 
-      // Store token and user data
-      if (response.data.success && response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-      }
-
-      return response.data;
-    } catch (error) {
-      throw error;
+    if (response.data.success && response.data.token) {
+      localStorage.setItem("authToken", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.data));
     }
+
+    return response.data;
   },
 
   logout: () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
-    localStorage.clear();
-    window.location.href = "/";
   },
 
   getCurrentUser: () => {
@@ -58,31 +46,6 @@ const authAPI = {
 
   isAuthenticated: () => {
     return !!localStorage.getItem("authToken");
-  },
-
-  requestOTP: async (data) => {
-    try {
-      const response = await apiClient.post(`${AUTH_BASE}/request-otp`, data);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  verifyOTP: async (data) => {
-    try {
-      const response = await apiClient.post(`${AUTH_BASE}/verify-otp`, data);
-
-      // Store token and user data
-      if (response.data.success && response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-      }
-
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
   },
 };
 
