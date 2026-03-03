@@ -35,7 +35,7 @@ const authAPI = {
       const userStr = localStorage.getItem("user");
       return userStr ? JSON.parse(userStr) : null;
     } catch (error) {
-      console.error("Error parsing user data:", error);
+      if (import.meta.env.DEV) console.error("Error parsing user data:", error);
       return null;
     }
   },

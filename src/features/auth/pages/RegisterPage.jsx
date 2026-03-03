@@ -47,7 +47,7 @@ const RegisterPage = () => {
         }
       }
     } catch (err) {
-      console.error("Registration error:", err);
+      if (import.meta.env.DEV) console.error("Registration error:", err);
     } finally {
       setLoading(false);
     }

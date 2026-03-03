@@ -28,7 +28,7 @@ const AddToCartButton = ({
     try {
       await addItem(product._id, config?._id, 1);
     } catch (error) {
-      console.error("Add error:", error);
+      if (import.meta.env.DEV) console.error("Add error:", error);
     } finally {
       setIsUpdating(false);
     }
@@ -41,7 +41,7 @@ const AddToCartButton = ({
     try {
       await updateQuantity(cartItem._id, action);
     } catch (error) {
-      console.error(`Error during ${action}:`, error);
+      if (import.meta.env.DEV) console.error(`Error during ${action}:`, error);
     } finally {
       setIsUpdating(false);
     }

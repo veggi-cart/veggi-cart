@@ -84,7 +84,7 @@ const AddressForm = ({ initialData, onSubmit, onCancel, loading }) => {
         }));
       },
       (error) => {
-        console.error("Error getting location:", error);
+        if (import.meta.env.DEV) console.error("Error getting location:", error);
         alert("Unable to retrieve your location");
       },
     );
