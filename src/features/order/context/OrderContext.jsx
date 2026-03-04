@@ -8,8 +8,9 @@ import {
 import orderAPI from "../../../api/endpoints/order.api";
 import { errorBus } from "../../../api/errorBus";
 import {
-  PAYMENT_POLL_INTERVAL_MS,
-  PAYMENT_POLL_MAX_ATTEMPTS,
+  PAYMENT_POLL_INITIAL_INTERVAL_MS,
+  PAYMENT_POLL_MAX_INTERVAL_MS,
+  PAYMENT_POLL_MAX_DURATION_MS,
   PAYMENT_STATUS,
   ORDER_STATUS,
 } from "../../../constants/order.constants";
@@ -32,7 +33,7 @@ export function OrderProvider({ children }) {
 
   const stopPolling = useCallback(() => {
     if (pollRef.current) {
-      clearInterval(pollRef.current);
+      clearTimeout(pollRef.current);
       pollRef.current = null;
     }
   }, []);
@@ -87,12 +88,11 @@ export function OrderProvider({ children }) {
   const pollOrderStatus = useCallback(
     (orderId, { onUpdate, onSuccess, onFail } = {}) => {
       stopPolling();
-      let attempts = 0;
+      const startTime = Date.now();
+      let interval = PAYMENT_POLL_INITIAL_INTERVAL_MS;
 
       return new Promise((resolve) => {
-        pollRef.current = setInterval(async () => {
-          attempts += 1;
-
+        const tick = async () => {
           try {
             const res = await orderAPI.getOrderStatus(orderId);
             const statusData = res.data;
@@ -122,8 +122,8 @@ export function OrderProvider({ children }) {
             // Network blip — keep polling
           }
 
-          // Max attempts reached — try manual verify as last resort
-          if (attempts >= PAYMENT_POLL_MAX_ATTEMPTS) {
+          // Check if max duration exceeded — try manual verify as last resort
+          if (Date.now() - startTime >= PAYMENT_POLL_MAX_DURATION_MS) {
             stopPolling();
             try {
               const verifyRes = await orderAPI.verifyPayment(orderId);
@@ -136,9 +136,15 @@ export function OrderProvider({ children }) {
               // ignore
             }
             onFail?.({ timedOut: true });
-            resolve({ confirmed: false, timedOut: true });
+            return resolve({ confirmed: false, timedOut: true });
           }
-        }, PAYMENT_POLL_INTERVAL_MS);
+
+          // Exponential backoff: 2s → 3s → 4.5s → 5s (capped)
+          interval = Math.min(interval * 1.5, PAYMENT_POLL_MAX_INTERVAL_MS);
+          pollRef.current = setTimeout(tick, interval);
+        };
+
+        pollRef.current = setTimeout(tick, interval);
       });
     },
     [stopPolling],

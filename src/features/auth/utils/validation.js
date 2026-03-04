@@ -66,6 +66,9 @@ export const validators = {
     if (longitude === undefined || latitude === undefined) {
       return "Location coordinates are required";
     }
+    if (longitude === 0 && latitude === 0) {
+      return "Please capture your location";
+    }
     if (longitude < -180 || longitude > 180) {
       return "Invalid longitude";
     }

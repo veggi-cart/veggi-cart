@@ -16,7 +16,6 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Redirect if already authenticated
     if (isAuthenticated && !authLoading) {
       if (isPending) {
         navigate("/pending-approval", { replace: true });
@@ -27,7 +26,6 @@ const RegisterPage = () => {
   }, [isAuthenticated, isPending, authLoading, navigate]);
 
   useEffect(() => {
-    // Clear any existing errors when component mounts
     clearError();
   }, [clearError]);
 
@@ -39,7 +37,6 @@ const RegisterPage = () => {
       const result = await register(userData);
 
       if (result.success) {
-        // New users typically require admin approval
         if (result.data.isApproved === false) {
           navigate("/pending-approval");
         } else {
@@ -54,40 +51,29 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-indigo-100 via-white to-purple-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-full mb-4">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-              />
-            </svg>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#009661] rounded-2xl mb-4 shadow-lg">
+            <span className="text-3xl">🥬</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-          <p className="mt-2 text-gray-600">Join us today and get started</p>
+          <p className="mt-2 text-gray-600">Join FreshMart today</p>
         </div>
 
         {/* Register Form Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 sm:p-8">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4" role="alert">
               <div className="flex items-start">
                 <svg
-                  className="w-5 h-5 text-red-600 mt-0.5 mr-3"
+                  className="w-5 h-5 text-red-600 mt-0.5 mr-3 shrink-0"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -96,18 +82,18 @@ const RegisterPage = () => {
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-red-800">{error}</p>
-                </div>
+                <p className="flex-1 text-sm font-medium text-red-800">{error}</p>
                 <button
                   onClick={clearError}
                   className="text-red-600 hover:text-red-800"
+                  aria-label="Dismiss error"
                 >
                   <svg
                     className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -122,13 +108,14 @@ const RegisterPage = () => {
           )}
 
           {/* Info Banner */}
-          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="mb-6 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
             <div className="flex items-start">
               <svg
-                className="w-5 h-5 text-blue-600 mt-0.5 mr-3"
+                className="w-5 h-5 text-emerald-600 mt-0.5 mr-3 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -137,7 +124,7 @@ const RegisterPage = () => {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <p className="text-sm text-blue-800">
+              <p className="text-sm text-emerald-800">
                 Your account will require admin approval before you can access
                 all features. You'll be notified once approved.
               </p>
@@ -152,7 +139,7 @@ const RegisterPage = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
+                className="font-medium text-[#009661] hover:text-[#007d51] transition-colors"
               >
                 Login here
               </Link>
@@ -161,8 +148,8 @@ const RegisterPage = () => {
         </div>
 
         {/* Footer */}
-        <p className="mt-8 text-center text-sm text-gray-500">
-          © 2024 Your Company. All rights reserved.
+        <p className="mt-8 text-center text-sm text-slate-500">
+          &copy; 2025 FreshMart. All rights reserved.
         </p>
       </div>
     </div>

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Eye, EyeOff, MapPin, UserCircle } from "lucide-react";
 import { validateRegisterForm } from "../utils/validation";
 
 const RegisterForm = ({ onSubmit, loading }) => {
@@ -15,7 +16,7 @@ const RegisterForm = ({ onSubmit, loading }) => {
       pincode: "",
       geoLocation: {
         type: "Point",
-        coordinates: [0, 0], // [longitude, latitude]
+        coordinates: [0, 0],
       },
     },
   });
@@ -30,7 +31,6 @@ const RegisterForm = ({ onSubmit, loading }) => {
       [name]: value,
     }));
 
-    // Clear error for this field
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -49,7 +49,6 @@ const RegisterForm = ({ onSubmit, loading }) => {
       },
     }));
 
-    // Clear error for this field
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
@@ -104,16 +103,12 @@ const RegisterForm = ({ onSubmit, loading }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check password confirmation
     if (formData.password !== formData.confirmPassword) {
       setErrors({ confirmPassword: "Passwords do not match" });
       return;
     }
 
-    // Prepare data for submission (exclude confirmPassword)
     const { confirmPassword, ...submitData } = formData;
-
-    // Validate form
     const validationErrors = validateRegisterForm(submitData);
 
     if (Object.keys(validationErrors).length > 0) {
@@ -121,7 +116,6 @@ const RegisterForm = ({ onSubmit, loading }) => {
       return;
     }
 
-    // Submit form
     onSubmit(submitData);
   };
 
@@ -129,360 +123,339 @@ const RegisterForm = ({ onSubmit, loading }) => {
     formData.address.geoLocation.coordinates[0] !== 0 ||
     formData.address.geoLocation.coordinates[1] !== 0;
 
+  const inputClass = (fieldName) =>
+    `w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#009661] focus:border-transparent transition-colors ${
+      errors[fieldName] ? "border-red-500" : "border-slate-200"
+    }`;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Personal Information */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">
+    <form onSubmit={handleSubmit} className="space-y-8">
+      {/* ── Personal Information ────────────────────────────────────────── */}
+      <fieldset>
+        <legend className="flex items-center gap-2 text-lg font-bold text-slate-800 mb-5">
+          <UserCircle className="w-5 h-5 text-[#009661]" aria-hidden="true" />
           Personal Information
-        </h3>
+        </legend>
 
-        {/* Full Name */}
-        <div>
-          <label
-            htmlFor="fullName"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Full Name *
-          </label>
-          <input
-            type="text"
-            id="fullName"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.fullName ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="Enter your full name"
-          />
-          {errors.fullName && (
-            <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
-          )}
-        </div>
+        <div className="space-y-4">
+          {/* Full Name */}
+          <div>
+            <label
+              htmlFor="fullName"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Full Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              className={inputClass("fullName")}
+              placeholder="Enter your full name"
+              aria-describedby={errors.fullName ? "fullName-error" : undefined}
+              aria-invalid={!!errors.fullName}
+            />
+            {errors.fullName && (
+              <p id="fullName-error" className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+            )}
+          </div>
 
-        {/* Phone Number */}
-        <div>
-          <label
-            htmlFor="phoneNumber"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Phone Number *
-          </label>
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            maxLength={10}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.phoneNumber ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="10-digit phone number"
-          />
-          {errors.phoneNumber && (
-            <p className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>
-          )}
-        </div>
+          {/* Phone Number */}
+          <div>
+            <label
+              htmlFor="phoneNumber"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Phone Number <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              maxLength={10}
+              className={inputClass("phoneNumber")}
+              placeholder="10-digit phone number"
+              aria-describedby={errors.phoneNumber ? "phoneNumber-error" : undefined}
+              aria-invalid={!!errors.phoneNumber}
+            />
+            {errors.phoneNumber && (
+              <p id="phoneNumber-error" className="mt-1 text-sm text-red-600">{errors.phoneNumber}</p>
+            )}
+          </div>
 
-        {/* Email (Optional) */}
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Email (Optional)
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="your@email.com"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-          )}
-        </div>
+          {/* Email (Optional) */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Email (Optional)
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={inputClass("email")}
+              placeholder="your@email.com"
+              aria-describedby={errors.email ? "email-error" : undefined}
+              aria-invalid={!!errors.email}
+            />
+            {errors.email && (
+              <p id="email-error" className="mt-1 text-sm text-red-600">{errors.email}</p>
+            )}
+          </div>
 
-        {/* Password */}
-        <div>
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Password *
-          </label>
-          <div className="relative">
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Password <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className={inputClass("password")}
+                placeholder="Minimum 6 characters"
+                aria-describedby={errors.password ? "password-error" : undefined}
+                aria-invalid={!!errors.password}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-5 h-5" aria-hidden="true" />
+                ) : (
+                  <Eye className="w-5 h-5" aria-hidden="true" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
+              <p id="password-error" className="mt-1 text-sm text-red-600">{errors.password}</p>
+            )}
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-slate-700 mb-1.5"
+            >
+              Confirm Password <span className="text-red-500">*</span>
+            </label>
             <input
               type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              value={formData.password}
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
               onChange={handleChange}
-              className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-                errors.password ? "border-red-500" : "border-gray-300"
-              }`}
-              placeholder="Minimum 6 characters"
+              className={inputClass("confirmPassword")}
+              placeholder="Re-enter your password"
+              aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
+              aria-invalid={!!errors.confirmPassword}
             />
+            {errors.confirmPassword && (
+              <p id="confirmPassword-error" className="mt-1 text-sm text-red-600">
+                {errors.confirmPassword}
+              </p>
+            )}
+          </div>
+        </div>
+      </fieldset>
+
+      {/* ── Delivery Address ────────────────────────────────────────────── */}
+      <fieldset className="pt-6 border-t border-slate-200">
+        <legend className="flex items-center gap-2 text-lg font-bold text-slate-800 mb-5">
+          <MapPin className="w-5 h-5 text-[#009661]" aria-hidden="true" />
+          Delivery Address
+        </legend>
+
+        <div className="space-y-4">
+          {/* House/Flat & Street — side by side on larger screens */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="houseOrFlat"
+                className="block text-sm font-medium text-slate-700 mb-1.5"
+              >
+                House/Flat Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="houseOrFlat"
+                name="houseOrFlat"
+                value={formData.address.houseOrFlat}
+                onChange={handleAddressChange}
+                className={inputClass("houseOrFlat")}
+                placeholder="e.g., Flat 301"
+                aria-describedby={errors.houseOrFlat ? "houseOrFlat-error" : undefined}
+                aria-invalid={!!errors.houseOrFlat}
+              />
+              {errors.houseOrFlat && (
+                <p id="houseOrFlat-error" className="mt-1 text-sm text-red-600">{errors.houseOrFlat}</p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="street"
+                className="block text-sm font-medium text-slate-700 mb-1.5"
+              >
+                Street <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="street"
+                name="street"
+                value={formData.address.street}
+                onChange={handleAddressChange}
+                className={inputClass("street")}
+                placeholder="Street name"
+                aria-describedby={errors.street ? "street-error" : undefined}
+                aria-invalid={!!errors.street}
+              />
+              {errors.street && (
+                <p id="street-error" className="mt-1 text-sm text-red-600">{errors.street}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Area & Pincode — side by side */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="area"
+                className="block text-sm font-medium text-slate-700 mb-1.5"
+              >
+                Area <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="area"
+                name="area"
+                value={formData.address.area}
+                onChange={handleAddressChange}
+                className={inputClass("area")}
+                placeholder="Locality/Area"
+                aria-describedby={errors.area ? "area-error" : undefined}
+                aria-invalid={!!errors.area}
+              />
+              {errors.area && (
+                <p id="area-error" className="mt-1 text-sm text-red-600">{errors.area}</p>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="pincode"
+                className="block text-sm font-medium text-slate-700 mb-1.5"
+              >
+                Pincode <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="pincode"
+                name="pincode"
+                value={formData.address.pincode}
+                onChange={handleAddressChange}
+                maxLength={6}
+                className={inputClass("pincode")}
+                placeholder="6-digit pincode"
+                aria-describedby={errors.pincode ? "pincode-error" : undefined}
+                aria-invalid={!!errors.pincode}
+              />
+              {errors.pincode && (
+                <p id="pincode-error" className="mt-1 text-sm text-red-600">{errors.pincode}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              Location <span className="text-red-500">*</span>
+            </label>
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              onClick={getCurrentLocation}
+              disabled={locationLoading}
+              aria-busy={locationLoading}
+              aria-label={
+                locationLoading
+                  ? "Getting your location"
+                  : hasLocation
+                    ? "Location captured. Click to refresh"
+                    : "Get current location"
+              }
+              className={`w-full px-4 py-3 border rounded-xl text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-[#009661] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 ${
+                hasLocation
+                  ? "border-emerald-300 text-emerald-700 bg-emerald-50"
+                  : "border-slate-200 text-slate-700 hover:bg-slate-50"
+              }`}
             >
-              {showPassword ? (
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                  />
-                </svg>
+              {locationLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#009661]" />
+                  Getting location...
+                </>
+              ) : hasLocation ? (
+                <>
+                  <svg
+                    className="w-5 h-5 text-emerald-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  Location captured
+                </>
               ) : (
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
+                <>
+                  <MapPin className="w-5 h-5" aria-hidden="true" />
+                  Get Current Location
+                </>
               )}
             </button>
-          </div>
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-600">{errors.password}</p>
-          )}
-        </div>
-
-        {/* Confirm Password */}
-        <div>
-          <label
-            htmlFor="confirmPassword"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Confirm Password *
-          </label>
-          <input
-            type={showPassword ? "text" : "password"}
-            id="confirmPassword"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.confirmPassword ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="Re-enter your password"
-          />
-          {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-red-600">
-              {errors.confirmPassword}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Address Information */}
-      <div className="space-y-4 pt-4 border-t border-gray-200">
-        <h3 className="text-lg font-medium text-gray-900">
-          Address Information
-        </h3>
-
-        {/* House/Flat */}
-        <div>
-          <label
-            htmlFor="houseOrFlat"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            House/Flat Number *
-          </label>
-          <input
-            type="text"
-            id="houseOrFlat"
-            name="houseOrFlat"
-            value={formData.address.houseOrFlat}
-            onChange={handleAddressChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.houseOrFlat ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="e.g., Flat 301, Building A"
-          />
-          {errors.houseOrFlat && (
-            <p className="mt-1 text-sm text-red-600">{errors.houseOrFlat}</p>
-          )}
-        </div>
-
-        {/* Street */}
-        <div>
-          <label
-            htmlFor="street"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Street *
-          </label>
-          <input
-            type="text"
-            id="street"
-            name="street"
-            value={formData.address.street}
-            onChange={handleAddressChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.street ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="Street name"
-          />
-          {errors.street && (
-            <p className="mt-1 text-sm text-red-600">{errors.street}</p>
-          )}
-        </div>
-
-        {/* Area */}
-        <div>
-          <label
-            htmlFor="area"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Area *
-          </label>
-          <input
-            type="text"
-            id="area"
-            name="area"
-            value={formData.address.area}
-            onChange={handleAddressChange}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.area ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="Locality/Area"
-          />
-          {errors.area && (
-            <p className="mt-1 text-sm text-red-600">{errors.area}</p>
-          )}
-        </div>
-
-        {/* Pincode */}
-        <div>
-          <label
-            htmlFor="pincode"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Pincode *
-          </label>
-          <input
-            type="text"
-            id="pincode"
-            name="pincode"
-            value={formData.address.pincode}
-            onChange={handleAddressChange}
-            maxLength={6}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors ${
-              errors.pincode ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="6-digit pincode"
-          />
-          {errors.pincode && (
-            <p className="mt-1 text-sm text-red-600">{errors.pincode}</p>
-          )}
-        </div>
-
-        {/* Location */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Location *
-          </label>
-          <button
-            type="button"
-            onClick={getCurrentLocation}
-            disabled={locationLoading}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-          >
-            {locationLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-600"></div>
-                Getting location...
-              </>
-            ) : hasLocation ? (
-              <>
-                <svg
-                  className="w-5 h-5 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Location captured
-              </>
-            ) : (
-              <>
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                Get Current Location
-              </>
+            {hasLocation && (
+              <p className="mt-1 text-xs text-slate-500">
+                Coordinates:{" "}
+                {formData.address.geoLocation.coordinates[1].toFixed(6)},{" "}
+                {formData.address.geoLocation.coordinates[0].toFixed(6)}
+              </p>
             )}
-          </button>
-          {hasLocation && (
-            <p className="mt-1 text-xs text-gray-600">
-              Coordinates:{" "}
-              {formData.address.geoLocation.coordinates[1].toFixed(6)},{" "}
-              {formData.address.geoLocation.coordinates[0].toFixed(6)}
-            </p>
-          )}
-          {errors.coordinates && (
-            <p className="mt-1 text-sm text-red-600">{errors.coordinates}</p>
-          )}
+            {errors.coordinates && (
+              <p className="mt-1 text-sm text-red-600" role="alert">{errors.coordinates}</p>
+            )}
+          </div>
         </div>
-      </div>
+      </fieldset>
 
       {/* Submit button */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-[#009661] text-white py-3 px-4 rounded-xl font-bold hover:bg-[#007d51] focus:outline-none focus:ring-2 focus:ring-[#009661] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? "Creating Account..." : "Create Account"}
       </button>

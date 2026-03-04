@@ -60,10 +60,10 @@ const CartItem = ({ item }) => {
             <button
               onClick={handleRemove}
               disabled={globalLoading}
-              className="p-2 rounded-lg text-slate-300 hover:text-red-600 hover:bg-red-50 transition-all opacity-100 sm:opacity-0 group-hover:opacity-100"
-              title="Remove Item"
+              className="p-2 rounded-lg text-slate-300 hover:text-red-600 hover:bg-red-50 focus:text-red-600 focus:bg-red-50 transition-all opacity-100 sm:opacity-0 group-hover:opacity-100 focus:opacity-100"
+              aria-label={`Remove ${product.name} from cart`}
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
 

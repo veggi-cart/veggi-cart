@@ -36,22 +36,22 @@ const MemberCard = ({ member, onEdit, onDelete, loading }) => {
             </p>
           </div>
         </div>
-        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
           <button
             onClick={() => onEdit(member)}
-            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
+            className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 focus:bg-slate-200 text-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-[#009661]"
             disabled={loading}
-            title="Edit member"
+            aria-label={`Edit ${member.fullName}`}
           >
-            <Edit2 className="w-4 h-4" />
+            <Edit2 className="w-4 h-4" aria-hidden="true" />
           </button>
           <button
             onClick={() => onDelete(member._id)}
-            className="p-2 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 transition-colors"
+            className="p-2 rounded-lg bg-red-100 hover:bg-red-200 focus:bg-red-200 text-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
             disabled={loading}
-            title="Remove member"
+            aria-label={`Remove ${member.fullName}`}
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
       </div>

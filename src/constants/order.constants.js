@@ -164,8 +164,9 @@ export const DELIVERY_CHARGE = 40;
 
 // ── Polling ───────────────────────────────────────────────────────────────────
 // How long to poll for payment confirmation before showing a manual retry
-export const PAYMENT_POLL_INTERVAL_MS = 3000;
-export const PAYMENT_POLL_MAX_ATTEMPTS = 20; // 60 s total
+export const PAYMENT_POLL_INITIAL_INTERVAL_MS = 2000;
+export const PAYMENT_POLL_MAX_INTERVAL_MS = 5000;
+export const PAYMENT_POLL_MAX_DURATION_MS = 90000; // 90 s total
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 export const ORDER_ROUTES = {

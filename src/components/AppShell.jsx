@@ -89,9 +89,9 @@ const AppShell = ({ children }) => {
                 <button
                   onClick={handleLogout}
                   className="p-2 text-slate-400 hover:text-red-500 transition-colors"
-                  title="Logout"
+                  aria-label="Logout"
                 >
-                  <LogOut className="w-5 h-5" />
+                  <LogOut className="w-5 h-5" aria-hidden="true" />
                 </button>
               </div>
             </nav>
@@ -107,8 +107,8 @@ const AppShell = ({ children }) => {
           </Link>
 
           {/* Cart icon with badge — quick access from top header */}
-          <Link to="/cart" className="relative p-2 rounded-lg text-slate-600">
-            <ShoppingCart className="w-6 h-6" />
+          <Link to="/cart" className="relative p-2 rounded-lg text-slate-600" aria-label={`Cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}>
+            <ShoppingCart className="w-6 h-6" aria-hidden="true" />
             {itemCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-black rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center border-2 border-white shadow-sm">
                 {itemCount > 9 ? "9+" : itemCount}
