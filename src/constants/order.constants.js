@@ -116,7 +116,6 @@ export const PAYMENT_METHOD = {
   NETBANKING: "netbanking",
   WALLET: "wallet",
   COD: "cod",
-  EMI: "emi",
 };
 
 export const PAYMENT_METHOD_CONFIG = {
@@ -148,12 +147,6 @@ export const PAYMENT_METHOD_CONFIG = {
     label: "Cash on Delivery",
     description: "Pay when your order arrives",
     icon: "💵",
-    popular: false,
-  },
-  [PAYMENT_METHOD.EMI]: {
-    label: "EMI",
-    description: "No-cost EMI available",
-    icon: "📅",
     popular: false,
   },
 };
