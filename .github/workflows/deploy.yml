@@ -24,6 +24,7 @@ jobs:
       - name: Build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_CASHFREE_ENV: production
         run: npm run build
 
       - name: Deploy to GitHub Pages
