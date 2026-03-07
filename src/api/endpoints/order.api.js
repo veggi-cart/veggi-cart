@@ -39,7 +39,7 @@ const orderAPI = {
    * Call this after redirect if polling shows status still "pending".
    */
   verifyPayment: async (orderId) => {
-    const response = await apiClient.post(`/orders/${orderId}/verify-payment`);
+    const response = await apiClient.post(`/orders/${orderId}/verify-payment`, {});
     return response.data;
   },
 

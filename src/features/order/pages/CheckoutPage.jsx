@@ -83,7 +83,7 @@ const CheckoutPage = () => {
       cashfreeInstance.checkout({
         paymentSessionId,
         redirectTarget: "_self", // redirect in same tab
-        returnUrl: `${window.location.origin}/#${ORDER_ROUTES.PAYMENT_PROCESSING}?order_id=${order.orderId}`,
+        returnUrl: `${window.location.origin}/#${ORDER_ROUTES.PAYMENT_PROCESSING}?app_order_id=${order.orderId}`,
       });
 
       // Navigate to processing page immediately so the user sees feedback

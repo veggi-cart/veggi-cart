@@ -86,10 +86,30 @@ export function OrderProvider({ children }) {
    * Resolves with the final status object.
    */
   const pollOrderStatus = useCallback(
-    (orderId, { onUpdate, onSuccess, onFail } = {}) => {
+    async (orderId, { onUpdate, onSuccess, onFail } = {}) => {
       stopPolling();
       const startTime = Date.now();
       let interval = PAYMENT_POLL_INITIAL_INTERVAL_MS;
+
+      // Verify with Cashfree immediately — if payment is already confirmed
+      // there's no need to wait for the webhook.
+      try {
+        const verifyRes = await orderAPI.verifyPayment(orderId);
+        const d = verifyRes.data;
+        if (d?.payment?.status === PAYMENT_STATUS.SUCCESS) {
+          onSuccess?.(d);
+          return { confirmed: true, data: d };
+        }
+        if (
+          d?.payment?.status === PAYMENT_STATUS.FAILED ||
+          d?.orderStatus === ORDER_STATUS.CANCELLED
+        ) {
+          onFail?.(d);
+          return { confirmed: false, data: d };
+        }
+      } catch {
+        // Verify failed — fall through to polling
+      }
 
       return new Promise((resolve) => {
         const tick = async () => {

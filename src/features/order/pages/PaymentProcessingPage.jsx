@@ -20,7 +20,7 @@ const PaymentProcessingPage = () => {
   const { clearCart } = useCart();
 
   // orderId can come from URL param (after Cashfree redirect) or router state
-  const orderId = searchParams.get("order_id") || location.state?.orderId;
+  const orderId = searchParams.get("app_order_id") || searchParams.get("order_id") || location.state?.orderId;
 
   const [phase, setPhase] = useState(PHASE.POLLING);
   const [attempt, setAttempt] = useState(0);
