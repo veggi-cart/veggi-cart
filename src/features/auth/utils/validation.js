@@ -85,18 +85,10 @@ export const validators = {
 export const validateLoginForm = (formData) => {
   const errors = {};
 
-  // Validate login identifier (email or phone)
-  if (!formData.email && !formData.phoneNumber) {
-    errors.identifier = "Email or phone number is required";
-  } else if (formData.email) {
-    const emailError = validators.email(formData.email);
-    if (emailError) errors.email = emailError;
-  } else if (formData.phoneNumber) {
-    const phoneError = validators.phoneNumber(formData.phoneNumber);
-    if (phoneError) errors.phoneNumber = phoneError;
+  if (!formData.userId?.trim()) {
+    errors.userId = "Phone number or email is required";
   }
 
-  // Validate password
   const passwordError = validators.password(formData.password);
   if (passwordError) errors.password = passwordError;
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import { useAuth } from "../../auth/hooks/useAuth";
 import AddressForm from "../components/AddressForm";
@@ -131,14 +131,24 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {/* Logout Button Section */}
-            <button
-              onClick={handleLogout}
-              className="group flex items-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all duration-200 font-bold border-2 border-red-100 shadow-sm"
-            >
-              <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              Logout
-            </button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              {/* Download App */}
+              <Link
+                to="/download"
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-[#009661] rounded-xl hover:bg-[#009661] hover:text-white transition-all duration-200 font-bold border-2 border-emerald-100 shadow-sm"
+              >
+                <span className="text-lg">📱</span>
+                Download App
+              </Link>
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="group flex items-center justify-center gap-2 px-6 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-all duration-200 font-bold border-2 border-red-100 shadow-sm"
+              >
+                <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
 

@@ -107,10 +107,14 @@ const AppShell = ({ children }) => {
           </Link>
 
           {/* Cart icon with badge — quick access from top header */}
-          <Link to="/cart" className="relative p-2 rounded-lg text-slate-600" aria-label={`Cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}>
+          <Link
+            to="/cart"
+            className="relative p-2 rounded-lg text-slate-600"
+            aria-label={`Cart${itemCount > 0 ? `, ${itemCount} items` : ""}`}
+          >
             <ShoppingCart className="w-6 h-6" aria-hidden="true" />
             {itemCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-black rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center border-2 border-white shadow-sm">
+              <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-black rounded-full min-w-4.5 h-4.5 px-1 flex items-center justify-center border-2 border-white shadow-sm">
                 {itemCount > 9 ? "9+" : itemCount}
               </span>
             )}
@@ -125,11 +129,33 @@ const AppShell = ({ children }) => {
         {/* ── Footer ──────────────────────────────────────────────────────── */}
         <footer className="border-t border-slate-100 mt-8 py-6 px-4">
           <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 text-xs text-slate-400">
-            <Link to="/contact" className="hover:text-[#009661] transition-colors">Contact Us</Link>
+            <Link
+              to="/download"
+              className="text-[#009661] font-semibold hover:text-[#007d51] transition-colors"
+            >
+              Download App
+            </Link>
             <span className="hidden sm:inline">·</span>
-            <Link to="/terms" className="hover:text-[#009661] transition-colors">Terms &amp; Conditions</Link>
+            <Link
+              to="/contact"
+              className="hover:text-[#009661] transition-colors"
+            >
+              Contact Us
+            </Link>
             <span className="hidden sm:inline">·</span>
-            <Link to="/refunds" className="hover:text-[#009661] transition-colors">Refunds &amp; Cancellations</Link>
+            <Link
+              to="/terms"
+              className="hover:text-[#009661] transition-colors"
+            >
+              Terms &amp; Conditions
+            </Link>
+            <span className="hidden sm:inline">·</span>
+            <Link
+              to="/refunds"
+              className="hover:text-[#009661] transition-colors"
+            >
+              Refunds &amp; Cancellations
+            </Link>
           </div>
         </footer>
       </main>
@@ -159,7 +185,7 @@ const AppShell = ({ children }) => {
                     strokeWidth={active ? 2.5 : 2}
                   />
                   {item.badge > 0 && (
-                    <span className="absolute -top-1.5 -right-2.5 bg-red-500 text-white text-[10px] font-black rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center border-2 border-white shadow-sm">
+                    <span className="absolute -top-1.5 -right-2.5 bg-red-500 text-white text-[10px] font-black rounded-full min-w-4.5 h-4.5 px-1 flex items-center justify-center border-2 border-white shadow-sm">
                       {item.badge}
                     </span>
                   )}

@@ -147,8 +147,17 @@ const RegisterPage = () => {
           </div>
         </div>
 
+        {/* Download App Banner */}
+        <Link
+          to="/download"
+          className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-white border-2 border-[#009661] text-[#009661] rounded-xl font-bold text-sm hover:bg-[#009661] hover:text-white transition-all"
+        >
+          <span className="text-lg">📱</span>
+          Download our Android App
+        </Link>
+
         {/* Footer */}
-        <p className="mt-8 text-center text-sm text-slate-500">
+        <p className="mt-6 text-center text-sm text-slate-500">
           &copy; 2025 FreshMart. All rights reserved.
         </p>
       </div>

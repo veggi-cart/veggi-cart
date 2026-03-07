@@ -55,7 +55,16 @@ const LoginPage = () => {
           </div>
         </div>
 
-        <div className="mt-8 text-center">
+        {/* Download App Banner */}
+        <Link
+          to="/download"
+          className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-white border-2 border-[#009661] text-[#009661] rounded-xl font-bold text-sm hover:bg-[#009661] hover:text-white transition-all"
+        >
+          <span className="text-lg">📱</span>
+          Download our Android App
+        </Link>
+
+        <div className="mt-6 text-center">
           <div className="flex flex-wrap justify-center gap-3 text-xs text-slate-400">
             <Link to="/contact" className="hover:text-[#009661] transition-colors">Contact Us</Link>
             <span>·</span>
