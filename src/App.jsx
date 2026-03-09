@@ -20,8 +20,8 @@ import LoginPage from "./features/auth/pages/LoginPage";
 import RegisterPage from "./features/auth/pages/RegisterPage";
 import PendingApprovalPage from "./features/auth/pages/PendingApprovalPage";
 import ProductsPage from "./features/products/pages/ProductsPage";
-import CartPage from "./features/cart/pages/CartPage";
-import ProfilePage from "./features/user/pages/ProfilePage";
+const CartPage = lazy(() => import("./features/cart/pages/CartPage"));
+const ProfilePage = lazy(() => import("./features/user/pages/ProfilePage"));
 
 // ── Public pages ─────────────────────────────────────────────────────────────
 const DownloadApp = lazy(() => import("./pages/DownloadApp"));
@@ -152,18 +152,18 @@ function App() {
                       <Route
                         path="/cart"
                         element={
-                          <Shell>
+                          <LazyShell>
                             <CartPage />
-                          </Shell>
+                          </LazyShell>
                         }
                       />
 
                       <Route
                         path="/profile"
                         element={
-                          <Shell>
+                          <LazyShell>
                             <ProfilePage />
-                          </Shell>
+                          </LazyShell>
                         }
                       />
 

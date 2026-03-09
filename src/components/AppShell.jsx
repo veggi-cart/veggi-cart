@@ -8,16 +8,16 @@ import {
 } from "lucide-react";
 import { useCart } from "../features/cart/hooks/useCart";
 
+const navItems = [
+  { path: "/products", icon: Package, label: "Products" },
+  { path: "/cart", icon: ShoppingCart, label: "Cart" },
+  { path: "/orders", icon: ClipboardList, label: "Orders" },
+  { path: "/profile", icon: User, label: "Profile" },
+];
+
 const AppShell = ({ children }) => {
   const location = useLocation();
   const { itemCount } = useCart();
-
-  const navItems = [
-    { path: "/products", icon: Package, label: "Products" },
-    { path: "/cart", icon: ShoppingCart, label: "Cart", badge: itemCount },
-    { path: "/orders", icon: ClipboardList, label: "Orders" },
-    { path: "/profile", icon: User, label: "Profile" },
-  ];
 
   const isActive = (path) =>
     location.pathname === path ||
@@ -59,9 +59,9 @@ const AppShell = ({ children }) => {
                       className={`w-5 h-5 ${active ? "fill-brand/20" : ""}`}
                     />
                     <span>{item.label}</span>
-                    {item.badge > 0 && (
+                    {item.path === "/cart" && itemCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-white">
-                        {item.badge > 9 ? "9+" : item.badge}
+                        {itemCount > 9 ? "9+" : itemCount}
                       </span>
                     )}
                   </Link>
@@ -163,9 +163,9 @@ const AppShell = ({ children }) => {
                     }`}
                     strokeWidth={active ? 2.5 : 2}
                   />
-                  {item.badge > 0 && (
+                  {item.path === "/cart" && itemCount > 0 && (
                     <span className="absolute -top-1.5 -right-2.5 bg-red-500 text-white text-[10px] font-black rounded-full min-w-4.5 h-4.5 px-1 flex items-center justify-center border-2 border-white shadow-sm">
-                      {item.badge}
+                      {itemCount}
                     </span>
                   )}
                 </div>

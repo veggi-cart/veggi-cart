@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useMemo } from "react";
 import apiClient from "../../../api/api.client";
 
 // Fallback values — used while fetching or if the request fails
@@ -37,8 +37,10 @@ export const DeliveryConfigProvider = ({ children }) => {
       });
   }, []);
 
+  const value = useMemo(() => config, [config]);
+
   return (
-    <DeliveryConfigContext.Provider value={config}>
+    <DeliveryConfigContext.Provider value={value}>
       {children}
     </DeliveryConfigContext.Provider>
   );

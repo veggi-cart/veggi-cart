@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import AddToCartButton from "./AddToCartButton";
 import PriceConfigsBottomSheet from "./PriceConfigsBottomSheet";
 
@@ -38,6 +38,7 @@ const ProductCard = ({ product, activeConfig }) => {
             src={product.imageUrl}
             alt={product.name}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
 
           {discount > 0 && isAvailable && (
@@ -128,4 +129,4 @@ const ProductCard = ({ product, activeConfig }) => {
   );
 };
 
-export default ProductCard;
+export default memo(ProductCard);

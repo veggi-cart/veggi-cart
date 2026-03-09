@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Search } from "lucide-react";
 import { useProducts } from "../hooks/useProducts";
 import { useCart } from "../../cart/hooks/useCart";
@@ -20,36 +21,38 @@ const ProductsPage = () => {
 
   // Build card list: one card per in-cart config (with qty ctrl),
   // or one Add card if none are in cart for this product.
-  const buildCards = () =>
-    filteredProducts.flatMap((product) => {
-      // During search, always show one card per product
-      if (filters.searchQuery) {
+  const cards = useMemo(
+    () =>
+      filteredProducts.flatMap((product) => {
+        if (filters.searchQuery) {
+          return [<ProductCard key={product._id} product={product} />];
+        }
+
+        const cartItems =
+          cart?.items?.filter(
+            (item) =>
+              (item.productId?._id ?? item.productId)?.toString() === product._id?.toString(),
+          ) ?? [];
+
+        if (cartItems.length > 0) {
+          return cartItems.map((item) => {
+            const config = product.priceConfigs.find(
+              (c) => c._id?.toString() === item.priceConfigId?.toString(),
+            );
+            return (
+              <ProductCard
+                key={`${product._id}-${item.priceConfigId}`}
+                product={product}
+                activeConfig={config}
+              />
+            );
+          });
+        }
+
         return [<ProductCard key={product._id} product={product} />];
-      }
-
-      const cartItems =
-        cart?.items?.filter(
-          (item) =>
-            (item.productId?._id ?? item.productId)?.toString() === product._id?.toString(),
-        ) ?? [];
-
-      if (cartItems.length > 0) {
-        return cartItems.map((item) => {
-          const config = product.priceConfigs.find(
-            (c) => c._id?.toString() === item.priceConfigId?.toString(),
-          );
-          return (
-            <ProductCard
-              key={`${product._id}-${item.priceConfigId}`}
-              product={product}
-              activeConfig={config}
-            />
-          );
-        });
-      }
-
-      return [<ProductCard key={product._id} product={product} />];
-    });
+      }),
+    [filteredProducts, filters.searchQuery, cart],
+  );
 
   const categories = getCategories();
 
@@ -236,7 +239,7 @@ const ProductsPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {buildCards()}
+            {cards}
           </div>
         )}
       </div>

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Trash2, Package, Loader2 } from "lucide-react";
 import { useCart } from "../hooks/useCart";
 import AddToCartButton from "../../products/components/AddToCartButton";
@@ -36,6 +37,7 @@ const CartItem = ({ item }) => {
               src={product.imageUrl}
               alt={product.name}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-brand-50">
@@ -111,4 +113,4 @@ const CartItem = ({ item }) => {
   );
 };
 
-export default CartItem;
+export default memo(CartItem);
