@@ -12,6 +12,7 @@ import { CartProvider } from "./features/cart/context/CartContext";
 import { OrderProvider } from "./features/order/context/OrderContext";
 import { DeliveryConfigProvider } from "./features/delivery/context/DeliveryConfigContext";
 import { ToastProvider } from "./components/ToastProvider";
+import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./features/auth/components/ProtectedRoute";
 import AppShell from "./components/AppShell";
 
@@ -84,6 +85,7 @@ const LazyFull = ({ children }) => (
 function App() {
   return (
     <BrowserRouter>
+      <ErrorBoundary>
       <ToastProvider>
         <AuthProvider>
           <UserProvider>
@@ -225,6 +227,7 @@ function App() {
           </UserProvider>
         </AuthProvider>
       </ToastProvider>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }
