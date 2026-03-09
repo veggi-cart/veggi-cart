@@ -124,7 +124,7 @@ const RegisterForm = ({ onSubmit, loading }) => {
     formData.address.geoLocation.coordinates[1] !== 0;
 
   const inputClass = (fieldName) =>
-    `w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#009661] focus:border-transparent transition-colors ${
+    `w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-[#099E0E] focus:border-transparent transition-colors ${
       errors[fieldName] ? "border-red-500" : "border-slate-200"
     }`;
 
@@ -133,7 +133,7 @@ const RegisterForm = ({ onSubmit, loading }) => {
       {/* ── Personal Information ────────────────────────────────────────── */}
       <fieldset>
         <legend className="flex items-center gap-2 text-lg font-bold text-slate-800 mb-5">
-          <UserCircle className="w-5 h-5 text-[#009661]" aria-hidden="true" />
+          <UserCircle className="w-5 h-5 text-[#099E0E]" aria-hidden="true" />
           Personal Information
         </legend>
 
@@ -280,7 +280,7 @@ const RegisterForm = ({ onSubmit, loading }) => {
       {/* ── Delivery Address ────────────────────────────────────────────── */}
       <fieldset className="pt-6 border-t border-slate-200">
         <legend className="flex items-center gap-2 text-lg font-bold text-slate-800 mb-5">
-          <MapPin className="w-5 h-5 text-[#009661]" aria-hidden="true" />
+          <MapPin className="w-5 h-5 text-[#099E0E]" aria-hidden="true" />
           Delivery Address
         </legend>
 
@@ -401,7 +401,7 @@ const RegisterForm = ({ onSubmit, loading }) => {
                     ? "Location captured. Click to refresh"
                     : "Get current location"
               }
-              className={`w-full px-4 py-3 border rounded-xl text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-[#009661] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 ${
+              className={`w-full px-4 py-3 border rounded-xl text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-[#099E0E] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 ${
                 hasLocation
                   ? "border-emerald-300 text-emerald-700 bg-emerald-50"
                   : "border-slate-200 text-slate-700 hover:bg-slate-50"
@@ -409,7 +409,7 @@ const RegisterForm = ({ onSubmit, loading }) => {
             >
               {locationLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#009661]" />
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#099E0E]" />
                   Getting location...
                 </>
               ) : hasLocation ? (
@@ -455,7 +455,7 @@ const RegisterForm = ({ onSubmit, loading }) => {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-[#009661] text-white py-3 px-4 rounded-xl font-bold hover:bg-[#007d51] focus:outline-none focus:ring-2 focus:ring-[#009661] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-[#099E0E] text-white py-3 px-4 rounded-xl font-bold hover:bg-[#078A0C] focus:outline-none focus:ring-2 focus:ring-[#099E0E] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {loading ? "Creating Account..." : "Create Account"}
       </button>

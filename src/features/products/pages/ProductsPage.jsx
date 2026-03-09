@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import { useProducts } from "../hooks/useProducts";
 import { useCart } from "../../cart/hooks/useCart";
 import ProductCard from "../components/ProductCard";
@@ -17,7 +16,6 @@ const ProductsPage = () => {
   } = useProducts();
   const { cart } = useCart();
 
-  const [showFilters, setShowFilters] = useState(false);
   const filteredProducts = getFilteredProducts();
 
   // Build card list: one card per in-cart config (with qty ctrl),
@@ -69,10 +67,6 @@ const ProductsPage = () => {
     updateFilters({ availableOnly: !filters.availableOnly });
   };
 
-  // Only non-category filters count for the badge (categories are always visible)
-  const hasNonCategoryFilters =
-    filters.searchQuery || !filters.availableOnly;
-
   const hasActiveFilters =
     filters.category || filters.searchQuery || !filters.availableOnly;
 
@@ -106,7 +100,7 @@ const ProductsPage = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-[#009661] overflow-hidden">
+      <div className="relative bg-[#099E0E] overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div
@@ -138,7 +132,7 @@ const ProductsPage = () => {
                 <Search
                   className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5
                  transition-all duration-300
-                 text-[#009661] group-focus-within:text-slate-900 group-focus-within:scale-110"
+                 text-[#099E0E] group-focus-within:text-slate-900 group-focus-within:scale-110"
                 />
                 <input
                   type="text"
@@ -168,7 +162,7 @@ const ProductsPage = () => {
             onClick={() => updateFilters({ category: null })}
             className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
               !filters.category
-                ? "bg-[#009661] text-white border-[#009661] shadow-sm"
+                ? "bg-[#099E0E] text-white border-[#099E0E] shadow-sm"
                 : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
             }`}
           >
@@ -180,7 +174,7 @@ const ProductsPage = () => {
               onClick={() => handleCategoryChange(category)}
               className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold capitalize border transition-all ${
                 filters.category === category
-                  ? "bg-[#009661] text-white border-[#009661] shadow-sm"
+                  ? "bg-[#099E0E] text-white border-[#099E0E] shadow-sm"
                   : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
               }`}
             >
@@ -204,60 +198,18 @@ const ProductsPage = () => {
             </span>
           </div>
 
-          {/* Filter Button — only for available-only toggle */}
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
-              showFilters || hasNonCategoryFilters
-                ? "bg-emerald-100 text-emerald-700 border-2 border-emerald-300"
-                : "bg-white text-slate-600 border-2 border-slate-200 hover:border-slate-300"
-            }`}
-          >
-            <SlidersHorizontal className="w-5 h-5" />
-            <span className="hidden sm:inline">Filters</span>
-            {hasNonCategoryFilters && !showFilters && (
-              <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-            )}
-          </button>
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={filters.availableOnly}
+              onChange={handleAvailableToggle}
+              className="w-4 h-4 rounded cursor-pointer accent-emerald-600"
+            />
+            <span className="text-sm font-medium text-slate-600">
+              Available only
+            </span>
+          </label>
         </div>
-
-        {/* Filter Panel — only shows Available Only toggle */}
-        {showFilters && (
-          <div className="bg-white rounded-2xl border-2 border-slate-200 p-4 md:p-6 mb-4 shadow-lg animate-slide-down">
-            {/* Available Only Toggle */}
-            <div className="flex items-center justify-between mb-4">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={filters.availableOnly}
-                  onChange={handleAvailableToggle}
-                  className="w-5 h-5 rounded cursor-pointer accent-emerald-600"
-                />
-                <span className="text-sm font-medium text-slate-700">
-                  Show available only
-                </span>
-              </label>
-            </div>
-
-            {/* Actions */}
-            <div className="flex gap-3">
-              {hasActiveFilters && (
-                <button
-                  onClick={resetFilters}
-                  className="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors"
-                >
-                  Reset All
-                </button>
-              )}
-              <button
-                onClick={() => setShowFilters(false)}
-                className="flex-1 px-4 py-2.5 bg-linear-to-r from-emerald-600 to-teal-600 text-white rounded-xl font-medium hover:from-emerald-700 hover:to-teal-700 transition-all shadow-lg shadow-emerald-200"
-              >
-                Apply
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Products Grid */}
         {filteredProducts.length === 0 ? (

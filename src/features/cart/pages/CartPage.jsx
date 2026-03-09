@@ -136,7 +136,7 @@ const CartPage = () => {
         <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30 bg-white border-t border-slate-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
           <button
             onClick={() => navigate(ORDER_ROUTES.CHECKOUT)}
-            className="w-full py-3.5 bg-[#009661] text-white rounded-xl font-bold text-base flex items-center justify-between px-5"
+            className="w-full py-3.5 bg-[#099E0E] text-white rounded-xl font-bold text-base flex items-center justify-between px-5"
           >
             <span>{itemCount} {itemCount === 1 ? "item" : "items"}</span>
             <span>Checkout · ₹{grandTotal.toFixed(2)}</span>

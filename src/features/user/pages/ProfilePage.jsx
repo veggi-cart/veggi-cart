@@ -135,7 +135,7 @@ const ProfilePage = () => {
               {/* Download App */}
               <Link
                 to="/download"
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-[#009661] rounded-xl hover:bg-[#009661] hover:text-white transition-all duration-200 font-bold border-2 border-emerald-100 shadow-sm"
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-emerald-50 text-[#099E0E] rounded-xl hover:bg-[#099E0E] hover:text-white transition-all duration-200 font-bold border-2 border-emerald-100 shadow-sm"
               >
                 <span className="text-lg">📱</span>
                 Download App

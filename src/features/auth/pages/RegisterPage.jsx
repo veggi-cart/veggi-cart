@@ -55,11 +55,11 @@ const RegisterPage = () => {
       <div className="max-w-2xl w-full">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#009661] rounded-2xl mb-4 shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#099E0E] rounded-2xl mb-4 shadow-lg">
             <span className="text-3xl">🥬</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-          <p className="mt-2 text-gray-600">Join FreshMart today</p>
+          <p className="mt-2 text-gray-600">Join Genzy Basket today</p>
         </div>
 
         {/* Register Form Card */}
@@ -139,7 +139,7 @@ const RegisterPage = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-medium text-[#009661] hover:text-[#007d51] transition-colors"
+                className="font-medium text-[#099E0E] hover:text-[#078A0C] transition-colors"
               >
                 Login here
               </Link>
@@ -150,7 +150,7 @@ const RegisterPage = () => {
         {/* Download App Banner */}
         <Link
           to="/download"
-          className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-white border-2 border-[#009661] text-[#009661] rounded-xl font-bold text-sm hover:bg-[#009661] hover:text-white transition-all"
+          className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-white border-2 border-[#099E0E] text-[#099E0E] rounded-xl font-bold text-sm hover:bg-[#099E0E] hover:text-white transition-all"
         >
           <span className="text-lg">📱</span>
           Download our Android App
@@ -158,7 +158,7 @@ const RegisterPage = () => {
 
         {/* Footer */}
         <p className="mt-6 text-center text-sm text-slate-500">
-          &copy; 2025 FreshMart. All rights reserved.
+          &copy; 2025 Genzy Basket. All rights reserved.
         </p>
       </div>
     </div>

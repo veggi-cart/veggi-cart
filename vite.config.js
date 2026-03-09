@@ -16,7 +16,7 @@ export default defineConfig({
       },
     }),
   ],
-  base: "/veggi-cart/",
+  base: "/",
   server: {
     host: true,
     strictPort: true,

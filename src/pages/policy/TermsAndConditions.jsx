@@ -13,7 +13,7 @@ const TermsAndConditions = () => (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <Link
         to="/"
-        className="inline-flex items-center gap-2 text-sm font-semibold text-[#009661] mb-6 hover:underline"
+        className="inline-flex items-center gap-2 text-sm font-semibold text-[#099E0E] mb-6 hover:underline"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Home
@@ -29,7 +29,7 @@ const TermsAndConditions = () => (
 
         <Section title="1. Acceptance of Terms">
           <p>
-            By accessing or using the Veggi-Cart platform (website and mobile
+            By accessing or using the Genzy Basket platform (website and mobile
             application), you agree to be bound by these Terms &amp; Conditions.
             If you do not agree, please do not use our services.
           </p>
@@ -37,7 +37,7 @@ const TermsAndConditions = () => (
 
         <Section title="2. Services">
           <p>
-            Veggi-Cart provides an online platform for ordering fresh
+            Genzy Basket provides an online platform for ordering fresh
             vegetables, fruits, and grocery items for home delivery. All
             products are listed with prices in Indian Rupees (INR).
           </p>
@@ -83,7 +83,7 @@ const TermsAndConditions = () => (
 
         <Section title="7. Limitation of Liability">
           <p>
-            Veggi-Cart shall not be liable for any indirect, incidental, or
+            Genzy Basket shall not be liable for any indirect, incidental, or
             consequential damages arising from the use of our platform or
             services. Our liability is limited to the value of the order in
             question.
@@ -102,14 +102,14 @@ const TermsAndConditions = () => (
             For questions about these terms, contact us at{" "}
             <a
               href="mailto:nandishhmn@gmail.com"
-              className="text-[#009661] hover:underline"
+              className="text-[#099E0E] hover:underline"
             >
               nandishhmn@gmail.com
             </a>{" "}
             or call{" "}
             <a
               href="tel:+916363784290"
-              className="text-[#009661] hover:underline"
+              className="text-[#099E0E] hover:underline"
             >
               +91 6363784290
             </a>

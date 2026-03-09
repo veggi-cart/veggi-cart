@@ -31,7 +31,7 @@ const LoginPage = () => {
       <div className="max-w-md w-full">
         {/* Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#009661] rounded-2xl mb-4 shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#099E0E] rounded-2xl mb-4 shadow-lg">
             <span className="text-3xl">🥬</span>
           </div>
           <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
@@ -47,7 +47,7 @@ const LoginPage = () => {
               Don&apos;t have an account?{" "}
               <Link
                 to="/register"
-                className="font-medium text-[#009661] hover:text-[#007d51] transition-colors"
+                className="font-medium text-[#099E0E] hover:text-[#078A0C] transition-colors"
               >
                 Create one now
               </Link>
@@ -58,7 +58,7 @@ const LoginPage = () => {
         {/* Download App Banner */}
         <Link
           to="/download"
-          className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-white border-2 border-[#009661] text-[#009661] rounded-xl font-bold text-sm hover:bg-[#009661] hover:text-white transition-all"
+          className="mt-6 flex items-center justify-center gap-2 w-full py-3 bg-white border-2 border-[#099E0E] text-[#099E0E] rounded-xl font-bold text-sm hover:bg-[#099E0E] hover:text-white transition-all"
         >
           <span className="text-lg">📱</span>
           Download our Android App
@@ -66,14 +66,14 @@ const LoginPage = () => {
 
         <div className="mt-6 text-center">
           <div className="flex flex-wrap justify-center gap-3 text-xs text-slate-400">
-            <Link to="/contact" className="hover:text-[#009661] transition-colors">Contact Us</Link>
+            <Link to="/contact" className="hover:text-[#099E0E] transition-colors">Contact Us</Link>
             <span>·</span>
-            <Link to="/terms" className="hover:text-[#009661] transition-colors">Terms &amp; Conditions</Link>
+            <Link to="/terms" className="hover:text-[#099E0E] transition-colors">Terms &amp; Conditions</Link>
             <span>·</span>
-            <Link to="/refunds" className="hover:text-[#009661] transition-colors">Refunds &amp; Cancellations</Link>
+            <Link to="/refunds" className="hover:text-[#099E0E] transition-colors">Refunds &amp; Cancellations</Link>
           </div>
           <p className="mt-3 text-sm text-gray-500">
-            &copy; 2025 FreshMart. All rights reserved.
+            &copy; 2025 Genzy Basket. All rights reserved.
           </p>
         </div>
       </div>

@@ -41,11 +41,11 @@ const AppShell = ({ children }) => {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-xl bg-[#009661] flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
+              <div className="w-10 h-10 rounded-xl bg-[#099E0E] flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
                 <span className="text-2xl">🥬</span>
               </div>
-              <span className="text-2xl font-black text-[#009661] tracking-tight">
-                FreshMart
+              <span className="text-2xl font-black text-[#099E0E] tracking-tight">
+                Genzy Basket
               </span>
             </Link>
 
@@ -60,12 +60,12 @@ const AppShell = ({ children }) => {
                     to={item.path}
                     className={`relative flex items-center gap-2 px-4 py-2 rounded-xl font-bold transition-all ${
                       active
-                        ? "bg-emerald-50 text-[#009661]"
+                        ? "bg-emerald-50 text-[#099E0E]"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                     }`}
                   >
                     <Icon
-                      className={`w-5 h-5 ${active ? "fill-[#009661]/20" : ""}`}
+                      className={`w-5 h-5 ${active ? "fill-[#099E0E]/20" : ""}`}
                     />
                     <span>{item.label}</span>
                     {item.badge > 0 && (
@@ -103,7 +103,7 @@ const AppShell = ({ children }) => {
       <header className="md:hidden sticky top-0 z-40 bg-white border-b border-slate-200">
         <div className="px-4 flex items-center justify-between h-14">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-black text-[#009661]">FreshMart</span>
+            <span className="text-xl font-black text-[#099E0E]">Genzy Basket</span>
           </Link>
 
           {/* Cart icon with badge — quick access from top header */}
@@ -131,28 +131,28 @@ const AppShell = ({ children }) => {
           <div className="max-w-7xl mx-auto flex flex-wrap justify-center gap-4 text-xs text-slate-400">
             <Link
               to="/download"
-              className="text-[#009661] font-semibold hover:text-[#007d51] transition-colors"
+              className="text-[#099E0E] font-semibold hover:text-[#078A0C] transition-colors"
             >
               Download App
             </Link>
             <span className="hidden sm:inline">·</span>
             <Link
               to="/contact"
-              className="hover:text-[#009661] transition-colors"
+              className="hover:text-[#099E0E] transition-colors"
             >
               Contact Us
             </Link>
             <span className="hidden sm:inline">·</span>
             <Link
               to="/terms"
-              className="hover:text-[#009661] transition-colors"
+              className="hover:text-[#099E0E] transition-colors"
             >
               Terms &amp; Conditions
             </Link>
             <span className="hidden sm:inline">·</span>
             <Link
               to="/refunds"
-              className="hover:text-[#009661] transition-colors"
+              className="hover:text-[#099E0E] transition-colors"
             >
               Refunds &amp; Cancellations
             </Link>
@@ -174,13 +174,13 @@ const AppShell = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 className={`relative flex flex-col items-center justify-center w-full h-full transition-all ${
-                  active ? "text-[#009661]" : "text-slate-400"
+                  active ? "text-[#099E0E]" : "text-slate-400"
                 }`}
               >
                 <div className="relative mb-1">
                   <Icon
                     className={`w-6 h-6 transition-all duration-300 ${
-                      active ? "scale-110 fill-[#009661]" : ""
+                      active ? "scale-110 fill-[#099E0E]" : ""
                     }`}
                     strokeWidth={active ? 2.5 : 2}
                   />

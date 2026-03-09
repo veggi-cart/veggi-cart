@@ -110,7 +110,7 @@ const ProductCard = ({ product, activeConfig }) => {
             <button
               onClick={openSheet}
               disabled={!isAvailable}
-              className="w-full h-10 flex items-center justify-center bg-[#009661] text-white font-bold rounded-xl transition-all active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-10 flex items-center justify-center bg-[#099E0E] text-white font-bold rounded-xl transition-all active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Add
             </button>
