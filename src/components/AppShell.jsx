@@ -34,7 +34,7 @@ const AppShell = ({ children }) => {
             {/* Logo */}
             <Link to="/" className="flex items-center group">
               <img
-                src="/Logo.png"
+                src="/logo_wordmark.png"
                 alt="Genzy Basket"
                 className="h-10 transition-transform group-hover:scale-105"
               />
@@ -88,7 +88,7 @@ const AppShell = ({ children }) => {
       <header className="md:hidden sticky top-0 z-40 bg-white border-b border-slate-200">
         <div className="px-4 flex items-center justify-between h-14">
           <Link to="/" className="flex items-center">
-            <img src="/Logo.png" alt="Genzy Basket" className="h-8" />
+            <img src="/logo_wordmark.png" alt="Genzy Basket" className="h-8" />
           </Link>
 
           <Link
