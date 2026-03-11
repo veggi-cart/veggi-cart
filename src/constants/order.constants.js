@@ -112,6 +112,7 @@ export const PAYMENT_STATUS_STYLE = {
 // ── Payment methods ───────────────────────────────────────────────────────────
 export const PAYMENT_METHOD = {
   ONLINE: "online",
+  WALLET: "wallet",
   COD: "cod",
 };
 
@@ -120,6 +121,11 @@ export const PAYMENT_METHOD_CONFIG = {
     label: "Pay Online",
     description: "UPI, Cards, Net Banking & more",
     icon: "📱",
+  },
+  [PAYMENT_METHOD.WALLET]: {
+    label: "Pay with Wallet",
+    icon: "👛",
+    // description is dynamic — set at render time based on balance
   },
   [PAYMENT_METHOD.COD]: {
     label: "Cash on Delivery",

@@ -10,6 +10,7 @@ import { UserProvider } from "./features/user/context/UserContext";
 import { ProductProvider } from "./features/products/context/ProductContext";
 import { CartProvider } from "./features/cart/context/CartContext";
 import { OrderProvider } from "./features/order/context/OrderContext";
+import { WalletProvider } from "./features/wallet/context/WalletContext";
 import { DeliveryConfigProvider } from "./features/delivery/context/DeliveryConfigContext";
 import { ToastProvider } from "./components/ToastProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -49,6 +50,7 @@ const OrdersListPage = lazy(
 const OrderDetailPage = lazy(
   () => import("./features/order/pages/OrderDetailPage"),
 );
+const WalletPage = lazy(() => import("./features/wallet/pages/WalletPage"));
 
 // ── Shared suspense fallback ──────────────────────────────────────────────────
 const PageLoader = () => (
@@ -93,6 +95,7 @@ function App() {
             <ProductProvider>
               <DeliveryConfigProvider>
                 <CartProvider>
+                  <WalletProvider>
                   <OrderProvider>
                     <Routes>
                       {/* ── Public ───────────────────────────────────────── */}
@@ -179,6 +182,15 @@ function App() {
                         }
                       />
 
+                      <Route
+                        path="/wallet"
+                        element={
+                          <LazyShell>
+                            <WalletPage />
+                          </LazyShell>
+                        }
+                      />
+
                       {/* Orders list lives inside AppShell (has the nav) */}
                       <Route
                         path="/orders"
@@ -231,6 +243,7 @@ function App() {
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </OrderProvider>
+                  </WalletProvider>
                 </CartProvider>
               </DeliveryConfigProvider>
             </ProductProvider>

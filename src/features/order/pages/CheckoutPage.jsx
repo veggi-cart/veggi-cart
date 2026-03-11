@@ -11,6 +11,7 @@ import {
   ORDER_ROUTES,
 } from "../../../constants/order.constants";
 import { useDeliveryConfig } from "../../delivery/context/DeliveryConfigContext";
+import { useWallet } from "../../wallet/hooks/useWallet";
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const CheckoutPage = () => {
     clearCart,
   } = useCart();
   const { createOrder, loading } = useOrder();
+  const { fetchWallet } = useWallet();
 
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHOD.ONLINE);
   const { deliveryCharge: deliveryRate, freeDeliveryThreshold } = useDeliveryConfig();
@@ -58,11 +60,12 @@ const CheckoutPage = () => {
     const result = await createOrder(paymentMethod);
     if (!result.success) return; // error already toasted by context
 
-    // COD — backend already cleared cart; just navigate
-    if (result.isCod) {
+    // COD or Wallet — backend already cleared cart; just navigate
+    if (result.isCod || paymentMethod === "wallet") {
       clearCart();
+      if (paymentMethod === "wallet") fetchWallet();
       navigate(ORDER_ROUTES.ORDER_SUCCESS, {
-        state: { orderId: result.order.orderId, isCod: true },
+        state: { orderId: result.order.orderId, isCod: paymentMethod === "cod" },
       });
       return;
     }
@@ -172,6 +175,7 @@ const CheckoutPage = () => {
                 selected={paymentMethod}
                 onChange={setPaymentMethod}
                 disabled={loading}
+                grandTotal={grandTotal}
               />
             </section>
           </div>

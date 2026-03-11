@@ -61,9 +61,9 @@ export function OrderProvider({ children }) {
       const { order, paymentSessionId, cashfreeOrderId } = result.data;
       setCurrentOrder(order);
 
-      if (paymentMethod === "cod") {
+      if (paymentMethod === "cod" || paymentMethod === "wallet") {
         errorBus.emit("Order placed successfully!", "success");
-        return { success: true, order, isCod: true };
+        return { success: true, order, isCod: paymentMethod === "cod" };
       }
 
       return { success: true, order, paymentSessionId, cashfreeOrderId };

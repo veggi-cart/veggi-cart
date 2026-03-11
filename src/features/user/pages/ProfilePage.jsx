@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { useWallet } from "../../wallet/hooks/useWallet";
 import AddressForm from "../components/AddressForm";
 import MemberForm from "../components/MemberForm";
 import MemberCard from "../components/MemberCard";
@@ -23,6 +24,7 @@ import {
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { balance } = useWallet();
   const {
     profile,
     loading,
@@ -98,7 +100,7 @@ const ProfilePage = () => {
         <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-200 p-8 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
             <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-              <div className="w-24 h-24 rounded-2xl bg-linear-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-4xl shadow-lg">
+              <div className="w-24 h-24 rounded-2xl bg-brand flex items-center justify-center text-white font-bold text-4xl shadow-lg shadow-brand/20">
                 {profile?.fullName?.charAt(0).toUpperCase() || "U"}
               </div>
               <div>
@@ -150,6 +152,22 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+
+        {/* Wallet Card */}
+        <Link
+          to="/wallet"
+          className="block bg-brand rounded-2xl p-6 mb-6 text-white shadow-lg shadow-brand/20 hover:shadow-xl transition-shadow"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium opacity-80 mb-1">Wallet Balance</p>
+              <p className="text-3xl font-black tracking-tight">₹{balance.toFixed(2)}</p>
+            </div>
+            <div className="px-5 py-2.5 bg-white/20 rounded-xl font-bold text-sm">
+              Add Money
+            </div>
+          </div>
+        </Link>
 
         {/* Error Message */}
         {error && (
