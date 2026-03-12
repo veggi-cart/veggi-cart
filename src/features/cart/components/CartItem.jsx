@@ -93,10 +93,7 @@ const CartItem = ({ item }) => {
 
             {/* Qty controls — no transform scaling hack */}
             <div className="w-32">
-              <AddToCartButton
-                product={product}
-                config={config}
-              />
+              <AddToCartButton product={product} config={config} />
             </div>
           </div>
         </div>
@@ -107,9 +104,7 @@ const CartItem = ({ item }) => {
         <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
           Item Subtotal
         </span>
-        <span className="font-bold text-slate-800">
-          ₹{itemTotal}
-        </span>
+        <span className="font-bold text-slate-800">₹{itemTotal}</span>
       </div>
     </div>
   );

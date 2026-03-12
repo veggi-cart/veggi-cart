@@ -169,6 +169,29 @@ const ProfilePage = () => {
           </div>
         </Link>
 
+        {/* Subscription Card */}
+        <Link
+          to="/subscriptions"
+          className="block bg-white rounded-2xl border-2 border-slate-200 p-6 mb-6 hover:shadow-lg transition-shadow"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-2xl">
+                🥛
+              </div>
+              <div>
+                <p className="font-bold text-slate-800">Daily Subscriptions</p>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Get milk, curd & coconut delivered daily
+                </p>
+              </div>
+            </div>
+            <div className="px-4 py-2 bg-brand text-white rounded-xl font-bold text-sm">
+              Subscribe
+            </div>
+          </div>
+        </Link>
+
         {/* Error Message */}
         {error && (
           <div className="mb-6 bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center justify-between">

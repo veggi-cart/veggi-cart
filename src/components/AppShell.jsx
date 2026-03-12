@@ -4,6 +4,7 @@ import {
   User,
   Package,
   ClipboardList,
+  CalendarCheck,
   Headset,
 } from "lucide-react";
 import { useCart } from "../features/cart/hooks/useCart";
@@ -11,6 +12,7 @@ import { useCart } from "../features/cart/hooks/useCart";
 const navItems = [
   { path: "/products", icon: Package, label: "Products" },
   { path: "/cart", icon: ShoppingCart, label: "Cart" },
+  { path: "/subscriptions", icon: CalendarCheck, label: "Subscribe" },
   { path: "/orders", icon: ClipboardList, label: "Orders" },
   { path: "/profile", icon: User, label: "Profile" },
 ];

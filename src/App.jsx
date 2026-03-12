@@ -11,6 +11,7 @@ import { ProductProvider } from "./features/products/context/ProductContext";
 import { CartProvider } from "./features/cart/context/CartContext";
 import { OrderProvider } from "./features/order/context/OrderContext";
 import { WalletProvider } from "./features/wallet/context/WalletContext";
+import { SubscriptionProvider } from "./features/subscription/context/SubscriptionContext";
 import { DeliveryConfigProvider } from "./features/delivery/context/DeliveryConfigContext";
 import { ToastProvider } from "./components/ToastProvider";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -51,6 +52,7 @@ const OrderDetailPage = lazy(
   () => import("./features/order/pages/OrderDetailPage"),
 );
 const WalletPage = lazy(() => import("./features/wallet/pages/WalletPage"));
+const SubscriptionPage = lazy(() => import("./features/subscription/pages/SubscriptionPage"));
 
 // ── Shared suspense fallback ──────────────────────────────────────────────────
 const PageLoader = () => (
@@ -96,6 +98,7 @@ function App() {
               <DeliveryConfigProvider>
                 <CartProvider>
                   <WalletProvider>
+                  <SubscriptionProvider>
                   <OrderProvider>
                     <Routes>
                       {/* ── Public ───────────────────────────────────────── */}
@@ -191,6 +194,15 @@ function App() {
                         }
                       />
 
+                      <Route
+                        path="/subscriptions"
+                        element={
+                          <LazyShell>
+                            <SubscriptionPage />
+                          </LazyShell>
+                        }
+                      />
+
                       {/* Orders list lives inside AppShell (has the nav) */}
                       <Route
                         path="/orders"
@@ -243,6 +255,7 @@ function App() {
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </OrderProvider>
+                  </SubscriptionProvider>
                   </WalletProvider>
                 </CartProvider>
               </DeliveryConfigProvider>
