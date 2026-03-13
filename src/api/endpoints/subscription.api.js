@@ -1,6 +1,12 @@
 import apiClient from "../api.client";
 
 const subscriptionAPI = {
+  /** Get products eligible for subscription (public) */
+  getSubscriptionProducts: async () => {
+    const response = await apiClient.get("/subscriptions/products");
+    return response.data;
+  },
+
   /** Paginated list of user's subscriptions */
   getSubscriptions: async (page = 1, limit = 10) => {
     const response = await apiClient.get("/subscriptions", {

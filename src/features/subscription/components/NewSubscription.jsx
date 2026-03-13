@@ -6,19 +6,13 @@ import {
   CalendarDays,
   Loader2,
 } from "lucide-react";
-import { useProducts } from "../../products/hooks/useProducts";
 import { useWallet } from "../../wallet/hooks/useWallet";
 import { useSubscription } from "../hooks/useSubscription";
 import { errorBus } from "../../../api/errorBus";
+import subscriptionAPI from "../../../api/endpoints/subscription.api";
 import ProductSelector from "./ProductSelector";
 import CalendarPicker from "./CalendarPicker";
 import SubscriptionSummary from "./SubscriptionSummary";
-
-const SUBSCRIPTION_PRODUCT_IDS = [
-  "6992fe0cd34ec5e48a6ecb3c", // coconut
-  "6992fe0cd34ec5e48a6ecb68", // milk
-  "6992fe0cd34ec5e48a6ecb6a", // curd
-];
 
 const toDateKey = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -34,7 +28,6 @@ const loadCashfreeSdk = () =>
   });
 
 const NewSubscription = ({ onBack }) => {
-  const { products: allProducts, loading: productsLoading } = useProducts();
   const { balance, fetchWallet } = useWallet();
   const {
     createSubscription,
@@ -42,11 +35,8 @@ const NewSubscription = ({ onBack }) => {
     loading: subLoading,
   } = useSubscription();
 
-  const products = useMemo(
-    () => allProducts.filter((p) => SUBSCRIPTION_PRODUCT_IDS.includes(p._id)),
-    [allProducts],
-  );
-
+  const [products, setProducts] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [selections, setSelections] = useState({});
   const [step, setStep] = useState("products");
   const [selectedDates, setSelectedDates] = useState(new Set());
@@ -56,6 +46,10 @@ const NewSubscription = ({ onBack }) => {
 
   useEffect(() => {
     fetchWallet();
+    subscriptionAPI.getSubscriptionProducts()
+      .then((res) => setProducts(res.data || []))
+      .catch(() => setProducts([]))
+      .finally(() => setProductsLoading(false));
   }, [fetchWallet]);
 
   const selectedItems = useMemo(() => {
