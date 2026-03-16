@@ -18,15 +18,8 @@ const isPastCutoff = (cutoffHour, cutoffMinute) => {
 
 const CartPage = () => {
   const navigate = useNavigate();
-  const {
-    cart,
-    loading,
-    error,
-    clearCart,
-    itemCount,
-    totalAmount,
-    isEmpty,
-  } = useCart();
+  const { cart, loading, error, clearCart, itemCount, totalAmount, isEmpty } =
+    useCart();
 
   const {
     deliveryCharge: deliveryRate,
@@ -36,7 +29,8 @@ const CartPage = () => {
   } = useDeliveryConfig();
 
   // Single source of truth for delivery + grand total
-  const deliveryCharge = (totalAmount ?? 0) >= freeDeliveryThreshold ? 0 : deliveryRate;
+  const deliveryCharge =
+    (totalAmount ?? 0) >= freeDeliveryThreshold ? 0 : deliveryRate;
   const grandTotal = (totalAmount ?? 0) + deliveryCharge;
   const ordersClosed = isPastCutoff(orderCutoffHour, orderCutoffMinute);
 
@@ -52,7 +46,9 @@ const CartPage = () => {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-brand mx-auto" />
-          <p className="mt-6 text-slate-600 font-medium text-lg">Loading your cart…</p>
+          <p className="mt-6 text-slate-600 font-medium text-lg">
+            Loading your cart…
+          </p>
         </div>
       </div>
     );
@@ -61,7 +57,11 @@ const CartPage = () => {
   return (
     <PageLayout
       title="My Cart"
-      subtitle={isEmpty ? "Your cart is empty" : `${itemCount} ${itemCount === 1 ? "item" : "items"} in your cart`}
+      subtitle={
+        isEmpty
+          ? "Your cart is empty"
+          : `${itemCount} ${itemCount === 1 ? "item" : "items"} in your cart`
+      }
       headerRight={
         <>
           {!isEmpty && loading && (
@@ -96,50 +96,57 @@ const CartPage = () => {
         </>
       }
     >
-        {/* Global error */}
-        {error && (
-          <div className="mb-6 bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 shrink-0" />
-            <span className="font-medium">{error}</span>
-          </div>
-        )}
+      {/* Global error */}
+      {error && (
+        <div className="mb-6 bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-xl flex items-center gap-3">
+          <AlertCircle className="w-5 h-5 shrink-0" />
+          <span className="font-medium">{error}</span>
+        </div>
+      )}
 
-        {/* Cart layout */}
-        {isEmpty ? (
-          <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-200 p-12 text-center">
-            <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-6">
-              <ShoppingCart className="w-12 h-12 text-slate-400" />
-            </div>
-            <h2 className="text-2xl font-bold text-slate-800 mb-2">Your cart is empty</h2>
-            <p className="text-slate-600 mb-8">
-              Add some fresh products to get started.
-            </p>
-            <button
-              onClick={() => navigate("/products")}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-brand text-white rounded-xl font-bold hover:bg-brand-dark transition-all shadow-lg"
-            >
-              Browse Products
-            </button>
+      {/* Cart layout */}
+      {isEmpty ? (
+        <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-200 p-12 text-center">
+          <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-6">
+            <ShoppingCart className="w-12 h-12 text-slate-400" />
           </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Items */}
-            <div className="lg:col-span-2 space-y-4">
-              {cart?.items?.map((item) => (
-                <CartItem key={item._id} item={item} />
-              ))}
-            </div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">
+            Your cart is empty
+          </h2>
+          <p className="text-slate-600 mb-8">
+            Add some fresh products to get started.
+          </p>
+          <button
+            onClick={() => navigate("/products")}
+            className="inline-flex items-center gap-2 px-8 py-3 bg-brand text-white rounded-xl font-bold hover:bg-brand-dark transition-all shadow-lg"
+          >
+            Browse Products
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Items */}
+          <div className="lg:col-span-2 space-y-4">
+            {cart?.items?.map((item) => (
+              <CartItem key={item._id} item={item} />
+            ))}
+          </div>
 
-            {/* Summary */}
-            <div className="lg:col-span-1">
-              <CartSummary />
-            </div>
+          {/* Summary */}
+          <div className="lg:col-span-1">
+            <CartSummary />
           </div>
-        )}
+        </div>
+      )}
 
       {/* Mobile sticky checkout bar — respects ordersClosed */}
       {!isEmpty && (
-        <div className="lg:hidden fixed bottom-16 left-0 right-0 z-30 bg-white border-t border-slate-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]"
+          style={{
+            paddingBottom: "calc(env(safe-area-inset-bottom) + 0.75rem)",
+          }}
+        >
           <button
             onClick={() => navigate(ORDER_ROUTES.CHECKOUT)}
             disabled={loading || ordersClosed}
@@ -149,9 +156,13 @@ const CartPage = () => {
               <span className="w-full text-center">Orders Closed</span>
             ) : (
               <>
-                <span>{itemCount} {itemCount === 1 ? "item" : "items"}</span>
-                <span>Checkout · ₹{grandTotal % 1 === 0 ? grandTotal : grandTotal.toFixed(2)}</span>
-
+                <span>
+                  {itemCount} {itemCount === 1 ? "item" : "items"}
+                </span>
+                <span>
+                  Checkout · ₹
+                  {grandTotal % 1 === 0 ? grandTotal : grandTotal.toFixed(2)}
+                </span>
               </>
             )}
           </button>
