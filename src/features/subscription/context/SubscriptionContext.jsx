@@ -25,9 +25,9 @@ export function SubscriptionProvider({ children }) {
     }
   }, []);
 
-  // Fetch once when the provider mounts (like ProductContext)
+  // Fetch once when the provider mounts (only if authenticated)
   useEffect(() => {
-    fetchSubscriptions();
+    if (localStorage.getItem("authToken")) fetchSubscriptions();
   }, [fetchSubscriptions]);
 
   // ── Create subscription ────────────────────────────────────────────────────
