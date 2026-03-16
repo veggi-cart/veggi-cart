@@ -14,7 +14,12 @@ export const CartContext = createContext(null);
 export const CartProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
-  const [cart, setCart] = useState(null);
+  const [cart, setCart] = useState(() => {
+    try {
+      const c = localStorage.getItem("gb_cart");
+      return c ? JSON.parse(c) : null;
+    } catch { return null; }
+  });
 
   const { execute: runFetchCart, loading: fetchLoading } = useApiCall(
     cartAPI.getCart,
@@ -53,6 +58,15 @@ export const CartProvider = ({ children }) => {
       setCart(response.data);
     }
   }, [isAuthenticated, runFetchCart]);
+
+  // Sync cart to localStorage whenever it changes
+  useEffect(() => {
+    if (cart) {
+      try { localStorage.setItem("gb_cart", JSON.stringify(cart)); } catch {}
+    } else {
+      localStorage.removeItem("gb_cart");
+    }
+  }, [cart]);
 
   useEffect(() => {
     fetchCart();

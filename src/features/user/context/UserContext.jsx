@@ -7,7 +7,12 @@ export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState(() => {
+    try {
+      const p = localStorage.getItem("gb_profile");
+      return p ? JSON.parse(p) : null;
+    } catch { return null; }
+  });
   const [error, setError] = useState(null);
 
   // ── Wired API calls ──────────────────────────────────────────────────────
@@ -53,7 +58,10 @@ export const UserProvider = ({ children }) => {
   const fetchProfile = useCallback(async () => {
     if (!isAuthenticated) return;
     const response = await runFetchProfile();
-    if (response?.success) setProfile(response.data);
+    if (response?.success) {
+      setProfile(response.data);
+      try { localStorage.setItem("gb_profile", JSON.stringify(response.data)); } catch {}
+    }
   }, [isAuthenticated, runFetchProfile]);
 
   useEffect(() => {

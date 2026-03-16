@@ -17,5 +17,5 @@ if (splash) {
   setTimeout(() => {
     splash.classList.add("hidden");
     splash.addEventListener("transitionend", () => splash.remove());
-  }, 800);
+  }, 200);
 }

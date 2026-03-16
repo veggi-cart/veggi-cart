@@ -4,8 +4,26 @@ import { useApiCall } from "../../../api/use.apiCall";
 
 export const ProductContext = createContext(null);
 
+const CACHE_KEY = "gb_products";
+
+// Read cached products from localStorage (instant, no network)
+const getCached = () => {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch { /* corrupted cache */ }
+  return null;
+};
+
+const setCache = (data) => {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+  } catch { /* storage full */ }
+};
+
 export const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);
+  // Initialize from cache — user sees products instantly
+  const [products, setProducts] = useState(() => getCached() || []);
   const [filters, setFilters] = useState({
     category: null,
     searchQuery: "",
@@ -20,13 +38,17 @@ export const ProductProvider = ({ children }) => {
     productsApi.getById,
   );
 
-  const loading = listLoading || detailLoading;
+  // Only show loading if no cached data
+  const loading = (listLoading && products.length === 0) || detailLoading;
 
   // ── Actions ──────────────────────────────────────────────────────────────
 
   const fetchProducts = useCallback(async () => {
     const response = await runGetAll();
-    if (response?.data) setProducts(response.data);
+    if (response?.data) {
+      setProducts(response.data);
+      setCache(response.data);
+    }
   }, [runGetAll]);
 
   const getProductById = useCallback(
@@ -37,6 +59,7 @@ export const ProductProvider = ({ children }) => {
     [runGetById],
   );
 
+  // Always refresh from API in background (stale-while-revalidate)
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);

@@ -28,6 +28,9 @@ const authAPI = {
   logout: () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
+    localStorage.removeItem("gb_products");
+    localStorage.removeItem("gb_cart");
+    localStorage.removeItem("gb_profile");
   },
 
   getCurrentUser: () => {
