@@ -44,11 +44,11 @@ const subscriptionAPI = {
     return response.data;
   },
 
-  /** Skip a delivery date */
-  skipDate: async (subscriptionId, date) => {
+  /** Skip a delivery date (full day or specific items) */
+  skipDate: async (subscriptionId, date, itemIds = []) => {
     const response = await apiClient.post(
       `/subscriptions/${subscriptionId}/skip`,
-      { date },
+      { date, ...(itemIds.length > 0 && { itemIds }) },
     );
     return response.data;
   },

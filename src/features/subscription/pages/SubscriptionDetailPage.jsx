@@ -31,6 +31,7 @@ const dotColor = (status) => {
   switch (status) {
     case "delivered": return "bg-brand";
     case "skipped": return "bg-amber-500";
+    case "partially_skipped": return "bg-amber-300";
     case "upcoming": return "bg-blue-500";
     default: return "bg-slate-400";
   }
@@ -40,6 +41,7 @@ const dotTextColor = (status) => {
   switch (status) {
     case "delivered": return "text-brand";
     case "skipped": return "text-amber-600";
+    case "partially_skipped": return "text-amber-500";
     case "upcoming": return "text-blue-600";
     default: return "text-slate-500";
   }
@@ -49,6 +51,7 @@ const dotBg = (status) => {
   switch (status) {
     case "delivered": return "bg-emerald-50";
     case "skipped": return "bg-amber-50";
+    case "partially_skipped": return "bg-amber-50";
     case "upcoming": return "bg-blue-50";
     default: return "bg-slate-50";
   }
@@ -68,6 +71,8 @@ const SubscriptionDetailPage = () => {
   } = useSubscription();
 
   const [skipModal, setSkipModal] = useState(false);
+  const [skipSelectedDate, setSkipSelectedDate] = useState(null);
+  const [skipSelectedItems, setSkipSelectedItems] = useState(new Set());
   const [cancelModal, setCancelModal] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
 
@@ -107,10 +112,15 @@ const SubscriptionDetailPage = () => {
 
   const status = STATUS_STYLES[sub.status] || STATUS_STYLES.active;
   const deliveredCount = sub.deliveryDates?.filter((d) => d.status === "delivered").length ?? 0;
-  const skippedCount = sub.deliveryDates?.filter((d) => d.status === "skipped").length ?? 0;
+  const skippedCount = sub.deliveryDates?.filter((d) => d.status === "skipped" || d.status === "partially_skipped").length ?? 0;
   const totalDays = sub.totalDays ?? 0;
   const progress = totalDays > 0 ? ((deliveredCount + skippedCount) / totalDays) * 100 : 0;
-  const upcomingDates = sub.deliveryDates?.filter((d) => d.status === "upcoming") ?? [];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const upcomingDates = sub.deliveryDates?.filter((d) => {
+    if (d.status !== "upcoming" && d.status !== "partially_skipped") return false;
+    const dt = new Date(d.date); dt.setHours(0, 0, 0, 0);
+    return dt > today;
+  }) ?? [];
 
   const handlePause = async () => {
     await pauseSubscription(sub.subscriptionId);
@@ -127,9 +137,40 @@ const SubscriptionDetailPage = () => {
     setCancelReason("");
   };
 
-  const handleSkip = async (date) => {
-    await skipDate(sub.subscriptionId, date.split("T")[0]);
+  const openSkipModal = () => {
+    setSkipSelectedDate(null);
+    setSkipSelectedItems(new Set());
+    setSkipModal(true);
+  };
+
+  const selectSkipDate = (dd) => {
+    const alreadySkipped = new Set(dd.skippedItems || []);
+    const preSelected = new Set(
+      (sub.items || []).map((i) => i._id).filter((id) => !alreadySkipped.has(id)),
+    );
+    setSkipSelectedDate(dd);
+    setSkipSelectedItems(preSelected);
+  };
+
+  const toggleSkipItem = (itemId) => {
+    setSkipSelectedItems((prev) => {
+      const next = new Set(prev);
+      next.has(itemId) ? next.delete(itemId) : next.add(itemId);
+      return next;
+    });
+  };
+
+  const handleSkipConfirm = async () => {
+    if (!skipSelectedDate || skipSelectedItems.size === 0) return;
+    const allSelected = skipSelectedItems.size === (sub.items || []).length;
+    await skipDate(
+      sub.subscriptionId,
+      skipSelectedDate.date.split("T")[0],
+      allSelected ? [] : [...skipSelectedItems],
+    );
     setSkipModal(false);
+    setSkipSelectedDate(null);
+    setSkipSelectedItems(new Set());
   };
 
   return (
@@ -222,7 +263,7 @@ const SubscriptionDetailPage = () => {
               icon={SkipForward}
               label="Skip Date"
               color="amber"
-              onClick={() => setSkipModal(true)}
+              onClick={openSkipModal}
               disabled={loading || upcomingDates.length === 0}
             />
             <ActionButton
@@ -266,30 +307,93 @@ const SubscriptionDetailPage = () => {
       {/* Skip Date Modal */}
       {skipModal && (
         <Modal onClose={() => setSkipModal(false)}>
-          <h3 className="font-bold text-slate-800 text-lg">Skip a Delivery</h3>
-          <p className="text-slate-500 text-sm mt-1 mb-4">Select a date to skip. You'll get a refund for that day.</p>
-          <div className="space-y-2 max-h-60 overflow-y-auto">
-            {upcomingDates.map((d) => (
+          {/* Step 1 — pick a date */}
+          {!skipSelectedDate ? (
+            <>
+              <h3 className="font-bold text-slate-800 text-lg">Skip a Delivery</h3>
+              <p className="text-slate-500 text-sm mt-1 mb-4">Select a date to skip items on.</p>
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {upcomingDates.map((d) => (
+                  <button
+                    key={d.date}
+                    onClick={() => selectSkipDate(d)}
+                    disabled={loading}
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 hover:border-brand hover:bg-emerald-50 transition-all text-left disabled:opacity-50"
+                  >
+                    <div className="flex items-center gap-2">
+                      <CalendarDays className="w-4 h-4 text-slate-400" />
+                      <div>
+                        <span className="text-sm font-medium text-slate-700">{formatDate(d.date)}</span>
+                        {d.status === "partially_skipped" && (
+                          <p className="text-xs text-amber-500">{(d.skippedItems || []).length} item(s) already skipped</p>
+                        )}
+                      </div>
+                    </div>
+                    <SkipForward className="w-4 h-4 text-slate-400" />
+                  </button>
+                ))}
+              </div>
               <button
-                key={d.date}
-                onClick={() => handleSkip(d.date)}
-                disabled={loading}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-slate-200 hover:border-brand hover:bg-emerald-50 transition-all text-left disabled:opacity-50"
+                onClick={() => setSkipModal(false)}
+                className="mt-4 w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-all"
               >
-                <div className="flex items-center gap-2">
-                  <CalendarDays className="w-4 h-4 text-slate-400" />
-                  <span className="text-sm font-medium text-slate-700">{formatDate(d.date)}</span>
-                </div>
-                <SkipForward className="w-4 h-4 text-slate-400" />
+                Close
               </button>
-            ))}
-          </div>
-          <button
-            onClick={() => setSkipModal(false)}
-            className="mt-4 w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold text-sm hover:bg-slate-200 transition-all"
-          >
-            Close
-          </button>
+            </>
+          ) : (
+            /* Step 2 — pick items */
+            <>
+              <div className="flex items-center gap-2 mb-1">
+                <button onClick={() => setSkipSelectedDate(null)} className="p-1 rounded-lg hover:bg-slate-100">
+                  <ArrowLeft className="w-4 h-4 text-slate-500" />
+                </button>
+                <h3 className="font-bold text-slate-800 text-lg">Choose items to skip</h3>
+              </div>
+              <p className="text-slate-500 text-sm mb-4">{formatDate(skipSelectedDate.date)}</p>
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {(sub.items || []).map((item) => {
+                  const alreadySkipped = (skipSelectedDate.skippedItems || []).includes(item._id);
+                  const checked = alreadySkipped || skipSelectedItems.has(item._id);
+                  return (
+                    <label
+                      key={item._id}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all cursor-pointer ${
+                        alreadySkipped
+                          ? "border-amber-100 bg-amber-50 opacity-60 cursor-not-allowed"
+                          : checked
+                          ? "border-amber-300 bg-amber-50"
+                          : "border-slate-200 hover:border-amber-300"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        disabled={alreadySkipped}
+                        onChange={() => !alreadySkipped && toggleSkipItem(item._id)}
+                        className="accent-amber-500 w-4 h-4"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-slate-700">{item.productSnapshot?.name}</p>
+                        <p className="text-xs text-slate-400">
+                          {alreadySkipped ? "Already skipped" : `${item.displayLabel} × ${item.quantity}`}
+                        </p>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+              <button
+                onClick={handleSkipConfirm}
+                disabled={loading || skipSelectedItems.size === 0}
+                className="mt-4 w-full py-3 rounded-xl bg-amber-500 text-white font-semibold text-sm hover:bg-amber-600 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+                {skipSelectedItems.size === (sub.items || []).length
+                  ? "Skip entire day"
+                  : `Skip ${skipSelectedItems.size} item(s)`}
+              </button>
+            </>
+          )}
         </Modal>
       )}
 

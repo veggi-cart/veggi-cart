@@ -61,10 +61,10 @@ export function SubscriptionProvider({ children }) {
   }, []);
 
   // ── Skip date ──────────────────────────────────────────────────────────────
-  const skipDate = useCallback(async (subscriptionId, date) => {
+  const skipDate = useCallback(async (subscriptionId, date, itemIds = []) => {
     setLoading(true);
     try {
-      const res = await subscriptionAPI.skipDate(subscriptionId, date);
+      const res = await subscriptionAPI.skipDate(subscriptionId, date, itemIds);
       if (!res.success) throw new Error(res.message || "Failed to skip date");
       // Update in-place
       setSubscriptions((prev) =>
@@ -72,7 +72,7 @@ export function SubscriptionProvider({ children }) {
           s.subscriptionId === subscriptionId ? res.data : s,
         ),
       );
-      errorBus.emit("Date skipped, refund added to wallet", "success");
+      errorBus.emit(res.message || "Skipped, refund added to wallet", "success");
       return res.data;
     } catch (err) {
       errorBus.emit(err.message, "error");
