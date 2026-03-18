@@ -52,7 +52,17 @@ const CheckoutPage = () => {
       document.head.appendChild(script);
     });
 
+  const [showCodConfirm, setShowCodConfirm] = useState(false);
+
   // ── Handle Place Order ───────────────────────────────────────────────────
+  const handleCheckout = () => {
+    if (paymentMethod === "cod") {
+      setShowCodConfirm(true);
+      return;
+    }
+    handlePlaceOrder();
+  };
+
   const handlePlaceOrder = async () => {
     if (!address) {
       navigate("/profile"); // send to profile to add address
@@ -217,7 +227,7 @@ const CheckoutPage = () => {
             />
 
             <button
-              onClick={handlePlaceOrder}
+              onClick={handleCheckout}
               disabled={loading || !address || itemCount === 0}
               className="w-full py-4 bg-brand text-white rounded-xl font-bold text-lg
                 hover:bg-brand-dark transition-all shadow-lg shadow-emerald-100
@@ -226,6 +236,8 @@ const CheckoutPage = () => {
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
+              ) : paymentMethod === "cod" ? (
+                "Place Order"
               ) : (
                 `Pay ₹${grandTotal.toFixed(2)}`
               )}
@@ -238,6 +250,35 @@ const CheckoutPage = () => {
           </div>
         </div>
       </div>
+
+      {/* COD Confirmation Modal */}
+      {showCodConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full shadow-xl">
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Confirm Order</h3>
+            <p className="text-sm text-slate-600 mb-6">
+              Are you sure you want to place this order with Cash on Delivery?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCodConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-sm hover:bg-slate-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowCodConfirm(false);
+                  handlePlaceOrder();
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-brand text-white font-semibold text-sm hover:bg-brand-dark transition-colors"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
