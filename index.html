@@ -3,6 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ── SEO: Primary Meta Tags ─────────────────────────────────────── -->
+    <title>Genzy Basket — Fresh Groceries & Daily Essentials Delivered</title>
+    <meta name="description" content="Genzy Basket delivers fresh groceries, fruits, vegetables, and daily essentials to your doorstep. Order online for fast, reliable delivery. Shop now at genzybasket.com!" />
+    <meta name="keywords" content="Genzy Basket, genzybasket, grocery delivery, fresh groceries online, fruits and vegetables delivery, daily essentials, online grocery shopping, food delivery, order groceries online" />
+    <meta name="author" content="Genzy Basket" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://genzybasket.com/" />
+
+    <!-- ── SEO: Open Graph (Facebook, WhatsApp, LinkedIn) ─────────────── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Genzy Basket" />
+    <meta property="og:title" content="Genzy Basket — Fresh Groceries & Daily Essentials Delivered" />
+    <meta property="og:description" content="Order fresh groceries, fruits, vegetables, and daily essentials online. Fast delivery to your doorstep from Genzy Basket." />
+    <meta property="og:url" content="https://genzybasket.com/" />
+    <meta property="og:image" content="https://genzybasket.com/logo_wordmark_tagline.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Genzy Basket - Fresh Groceries Delivered" />
+    <meta property="og:locale" content="en_IN" />
+
+    <!-- ── SEO: Twitter Card ──────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Genzy Basket — Fresh Groceries & Daily Essentials Delivered" />
+    <meta name="twitter:description" content="Order fresh groceries, fruits, vegetables, and daily essentials online. Fast delivery to your doorstep." />
+    <meta name="twitter:image" content="https://genzybasket.com/logo_wordmark_tagline.png" />
+    <meta name="twitter:image:alt" content="Genzy Basket - Fresh Groceries Delivered" />
+
+    <!-- ── SEO: JSON-LD Structured Data ───────────────────────────────── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://genzybasket.com/#website",
+          "url": "https://genzybasket.com/",
+          "name": "Genzy Basket",
+          "description": "Fresh groceries and daily essentials delivered to your doorstep",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://genzybasket.com/products?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://genzybasket.com/#organization",
+          "name": "Genzy Basket",
+          "url": "https://genzybasket.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://genzybasket.com/logo_icon.png",
+            "width": 254,
+            "height": 254
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "url": "https://genzybasket.com/contact"
+          },
+          "sameAs": []
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://genzybasket.com/#app",
+          "name": "Genzy Basket",
+          "url": "https://genzybasket.com/",
+          "applicationCategory": "ShoppingApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "INR"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- ── Preconnect & Icons ─────────────────────────────────────────── -->
     <link rel="dns-prefetch" href="https://api.genzybasket.com" />
     <link rel="preconnect" href="https://api.genzybasket.com" crossorigin />
     <link rel="icon" id="favicon" type="image/png" href="/logo_icon.png" />
@@ -60,7 +141,6 @@
       })();
     </script>
     <meta name="theme-color" content="#099E0E" />
-    <title>Genzy Basket</title>
     <style>
       /* ── Splash Screen ──────────────────────────────────────────────── */
       #splash {
@@ -139,5 +219,34 @@
     </div>
 
     <div id="root"></div>
+
+    <!-- ── SEO: Noscript fallback for crawlers that don't execute JS ── -->
+    <noscript>
+      <div style="max-width:800px;margin:0 auto;padding:40px 20px;font-family:system-ui,sans-serif">
+        <h1>Genzy Basket — Fresh Groceries & Daily Essentials Delivered</h1>
+        <p>Welcome to <strong>Genzy Basket</strong>, your trusted online grocery delivery service. We deliver fresh fruits, vegetables, dairy, and daily essentials straight to your doorstep.</p>
+        <h2>Why Shop with Genzy Basket?</h2>
+        <ul>
+          <li>Fresh groceries sourced daily</li>
+          <li>Fast and reliable home delivery</li>
+          <li>Wide selection of fruits, vegetables, and essentials</li>
+          <li>Easy online ordering</li>
+          <li>Subscription plans for daily needs</li>
+        </ul>
+        <h2>Quick Links</h2>
+        <nav>
+          <ul>
+            <li><a href="/products">Browse Products</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/terms">Terms & Conditions</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/refunds">Refunds & Cancellations</a></li>
+            <li><a href="/download">Download App</a></li>
+          </ul>
+        </nav>
+        <p>Visit <a href="https://genzybasket.com">genzybasket.com</a> to start shopping today!</p>
+      </div>
+    </noscript>
+
   </body>
 </html>
