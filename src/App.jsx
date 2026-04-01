@@ -144,7 +144,7 @@ function App() {
                         }
                       />
                       <Route
-                        path="/pay/:cashfreeOrderId"
+                        path="/pay/:gatewayOrderId"
                         element={
                           <Suspense fallback={<PageLoader />}>
                             <PayPage />
@@ -168,15 +168,15 @@ function App() {
                         }
                       />
 
-                      {/* ── Main app (AppShell + nav) ─────────────────────── */}
+                      {/* ── Public product browsing (no auth required) ───── */}
                       {["/", "/products"].map((path) => (
                         <Route
                           key={path}
                           path={path}
                           element={
-                            <Shell>
+                            <AppShell>
                               <ProductsPage />
-                            </Shell>
+                            </AppShell>
                           }
                         />
                       ))}
@@ -184,9 +184,9 @@ function App() {
                       <Route
                         path="/products/:id"
                         element={
-                          <LazyFull>
+                          <Suspense fallback={<PageLoader />}>
                             <ProductDetailPage />
-                          </LazyFull>
+                          </Suspense>
                         }
                       />
 
