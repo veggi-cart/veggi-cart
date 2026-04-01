@@ -11,11 +11,16 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "Genzy Basket",
+        name: "Genzy Basket — Fresh Groceries Delivered",
         short_name: "Genzy Basket",
+        description: "Order fresh groceries, fruits, vegetables, and daily essentials online. Fast delivery to your doorstep.",
         theme_color: "#099E0E",
-        background_color: "#099E0E",
+        background_color: "#ffffff",
         display: "standalone",
+        start_url: "/",
+        scope: "/",
+        lang: "en",
+        categories: ["food", "shopping"],
         icons: [
           {
             src: "/logo_icon.png",
@@ -26,8 +31,9 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Cache all images automatically
         globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg}"],
+        // Don't precache sitemap and robots
+        globIgnores: ["**/sitemap.xml", "**/robots.txt"],
       },
     }),
   ],

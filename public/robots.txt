@@ -1,0 +1,29 @@
+# Genzy Basket — https://genzybasket.com
+# Allow all search engines to crawl all public pages
+
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /contact
+Allow: /terms
+Allow: /privacy
+Allow: /refunds
+Allow: /download
+
+# Disallow private/auth pages
+Disallow: /login
+Disallow: /register
+Disallow: /cart
+Disallow: /checkout
+Disallow: /profile
+Disallow: /wallet
+Disallow: /orders
+Disallow: /payment
+Disallow: /order/success
+Disallow: /pending-approval
+Disallow: /subscriptions
+Disallow: /feedback
+Disallow: /pay/
+
+# Sitemap
+Sitemap: https://genzybasket.com/sitemap.xml
