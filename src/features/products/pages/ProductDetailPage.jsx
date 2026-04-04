@@ -67,10 +67,12 @@ const ProductDetailPage = () => {
     );
   }
 
+  const gp = (c) => c?.sellingPrice ?? 0;
   const cheapestConfig = product.priceConfigs?.reduce(
-    (min, c) => (c.price < min.price ? c : min),
+    (min, c) => (gp(c) < gp(min) ? c : min),
     product.priceConfigs[0],
   );
+  const cheapestPrice = gp(cheapestConfig);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -90,7 +92,7 @@ const ProductDetailPage = () => {
           {/* Hero image */}
           <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
             <img
-              src={product.imageUrl}
+              src={product.images?.[0]}
               alt={product.name}
               className="w-full h-full object-cover"
             />
@@ -132,15 +134,15 @@ const ProductDetailPage = () => {
             {cheapestConfig && (
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="text-2xl font-extrabold text-brand">
-                  ₹{cheapestConfig.price}
+                  ₹{cheapestPrice}
                 </span>
-                {cheapestConfig.mrp > cheapestConfig.price && (
+                {cheapestConfig.mrp > cheapestPrice && (
                   <>
                     <span className="text-slate-400 line-through text-sm">
                       ₹{cheapestConfig.mrp}
                     </span>
                     <span className="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full">
-                      ₹{cheapestConfig.mrp - cheapestConfig.price} OFF
+                      ₹{cheapestConfig.mrp - cheapestPrice} OFF
                     </span>
                   </>
                 )}
@@ -179,8 +181,8 @@ const ProductDetailPage = () => {
 
               <div className="space-y-3">
                 {product.priceConfigs?.map((config) => {
-                  const savings =
-                    config.mrp > config.price ? config.mrp - config.price : 0;
+                  const cp = gp(config);
+                  const savings = config.mrp > cp ? config.mrp - cp : 0;
 
                   return (
                     <div
@@ -190,7 +192,7 @@ const ProductDetailPage = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="text-sm font-semibold text-slate-800">
-                            {config.displayLabel}
+                            {config.label}
                           </span>
                           {savings > 0 && (
                             <span className="text-xs font-medium text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-full">
@@ -200,9 +202,9 @@ const ProductDetailPage = () => {
                         </div>
                         <div className="flex items-baseline gap-1.5 mt-0.5">
                           <span className="text-base font-bold text-brand">
-                            ₹{config.price}
+                            ₹{cp}
                           </span>
-                          {config.mrp > config.price && (
+                          {config.mrp > cp && (
                             <span className="text-xs text-slate-400 line-through">
                               ₹{config.mrp}
                             </span>

@@ -9,10 +9,12 @@ const STATUS_STYLES = {
   completed: { bg: "bg-slate-50", text: "text-slate-500", dot: "bg-slate-400", label: "COMPLETED" },
 };
 
+const SHORT_MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
 const formatShortDate = (dateStr) => {
   const d = new Date(dateStr);
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return `${d.getDate()} ${months[d.getMonth()]}`;
+  return `${d.getDate()} ${SHORT_MONTHS[d.getMonth()]}`;
 };
 
 const ActiveSubscriptions = ({ onNewSubscription } = {}) => {
@@ -52,23 +54,28 @@ const ActiveSubscriptions = ({ onNewSubscription } = {}) => {
     <div className="space-y-3">
       {subscriptions.map((sub) => {
         const status = STATUS_STYLES[sub.status] || STATUS_STYLES.active;
-        const deliveredCount = sub.deliveryDates?.filter((d) => d.status === "delivered").length ?? 0;
-        const skippedCount = sub.deliveryDates?.filter((d) => d.status === "skipped").length ?? 0;
+        const timeline = sub.timeline || [];
+        const deliveredCount = timeline.filter((d) => d.status === "delivered").length;
+        const skippedCount = timeline.filter((d) => d.status === "skipped").length;
         const totalDays = sub.totalDays ?? 0;
         const progress = totalDays > 0 ? ((deliveredCount + skippedCount) / totalDays) * 100 : 0;
-        const upcomingDates = sub.deliveryDates?.filter((d) => d.status === "upcoming") ?? [];
-        const nextDelivery = upcomingDates[0]?.date;
 
-        // Expiry: last upcoming date
+        // Find next active day (today or future)
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        let nextDeliveryDate = null;
         let lastUpcomingDate = null;
-        for (const dd of upcomingDates) {
-          const d = new Date(dd.date);
-          d.setHours(0, 0, 0, 0);
-          if (!lastUpcomingDate || d > lastUpcomingDate) lastUpcomingDate = d;
+        for (const day of timeline) {
+          const d = new Date(day.date);
+          if (day.status === "active" && d >= today) {
+            if (!nextDeliveryDate) nextDeliveryDate = day.date;
+            if (!lastUpcomingDate || d > lastUpcomingDate) lastUpcomingDate = d;
+          }
         }
-        const todayMs = new Date().setHours(0, 0, 0, 0);
+
+        const todayMs = today.getTime();
         const daysUntilExpiry = lastUpcomingDate
-          ? Math.round((lastUpcomingDate - todayMs) / 86400000)
+          ? Math.round((lastUpcomingDate.getTime() - todayMs) / 86400000)
           : null;
         const isNearExpiry = sub.status === "active" && daysUntilExpiry !== null && daysUntilExpiry <= 2;
         const expiryLabel = daysUntilExpiry === 0
@@ -77,13 +84,18 @@ const ActiveSubscriptions = ({ onNewSubscription } = {}) => {
           ? "Expires tomorrow"
           : `Expires in ${daysUntilExpiry} days`;
 
+        // Get items from first day (non-extras) for display
+        const firstDay = timeline[0];
+        const displayItems = (firstDay?.items || []).filter((i) => !i.isExtra);
+        const monthLabel = `${MONTHS[sub.month]} ${sub.year}`;
+
         return (
           <div
-            key={sub._id || sub.subscriptionId}
+            key={sub._id}
             className={`bg-white rounded-2xl border p-4 hover:shadow-md transition-all cursor-pointer ${isNearExpiry ? "border-amber-200" : "border-slate-100"}`}
-            onClick={() => navigate(`/subscriptions/${sub.subscriptionId}`)}
+            onClick={() => navigate(`/subscriptions/${sub._id}`)}
           >
-            {/* Header: status badge + subscription ID */}
+            {/* Header: status badge + month label */}
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold ${status.bg} ${status.text}`}>
@@ -95,47 +107,47 @@ const ActiveSubscriptions = ({ onNewSubscription } = {}) => {
                   </span>
                 )}
               </div>
-              <span className="text-[11px] text-slate-400 font-medium">
-                {sub.subscriptionId}
-              </span>
+              <span className="text-xs font-semibold text-slate-600">{monthLabel}</span>
             </div>
 
             {/* Next delivery */}
-            {nextDelivery && sub.status === "active" && (
+            {nextDeliveryDate && sub.status === "active" && (
               <div className="flex items-center gap-1 mb-3">
                 <Calendar className="w-3.5 h-3.5 text-slate-400" />
                 <span className="text-xs text-slate-500 font-medium">
-                  Next delivery: {formatShortDate(nextDelivery)}
+                  Next delivery: {formatShortDate(nextDeliveryDate)}
                 </span>
               </div>
             )}
 
-            {/* Items — rows with images like the app */}
-            <div className="mb-3 space-y-2">
-              {sub.items?.map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  {item.productSnapshot?.imageUrl ? (
-                    <img
-                      src={item.productSnapshot.imageUrl}
-                      alt={item.productSnapshot?.name}
-                      className="w-10 h-10 rounded-lg object-cover shrink-0"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                      <Package className="w-4 h-4 text-slate-400" />
+            {/* Items from first day */}
+            {displayItems.length > 0 && (
+              <div className="mb-3 space-y-2">
+                {displayItems.map((item, i) => (
+                  <div key={item._id || i} className="flex items-center gap-3">
+                    {item.imageUrl ? (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="w-10 h-10 rounded-lg object-cover shrink-0"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                        <Package className="w-4 h-4 text-slate-400" />
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-slate-700 truncate">
+                        {item.name}
+                      </p>
+                      <p className="text-xs text-slate-400">
+                        ₹{item.price} × {item.qty}
+                      </p>
                     </div>
-                  )}
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-700 truncate">
-                      {item.productSnapshot?.name}
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      {item.displayLabel} × {item.quantity}
-                    </p>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Progress bar */}
             <div className="mb-3">
@@ -153,13 +165,13 @@ const ActiveSubscriptions = ({ onNewSubscription } = {}) => {
               </div>
             </div>
 
-            {/* Cost row */}
+            {/* ID + Total */}
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-slate-500 font-medium">
-                Daily: ₹{sub.dailyCost}
+              <span className="text-[11px] text-slate-400 font-medium uppercase">
+                {sub._id}
               </span>
               <span className="text-sm text-slate-800 font-bold">
-                Total: ₹{sub.totalAmount}
+                ₹{sub.total?.toFixed(0)}
               </span>
             </div>
 

@@ -86,7 +86,7 @@ const NewSubscription = ({ onBack }) => {
   const dailyCost = useMemo(
     () =>
       selectedItems.reduce(
-        (sum, item) => sum + item.config.price * item.quantity,
+        (sum, item) => sum + item.config.sellingPrice * item.quantity,
         0,
       ),
     [selectedItems],

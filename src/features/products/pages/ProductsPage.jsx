@@ -5,6 +5,9 @@ import { useCart } from "../../cart/hooks/useCart";
 import ProductCard from "../components/ProductCard";
 import Skeleton from "../../../components/Skeleton";
 
+const prettify = (s) =>
+  s?.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) ?? s;
+
 const ProductsPage = () => {
   const {
     products,
@@ -90,7 +93,7 @@ const ProductsPage = () => {
               <Skeleton key={i} className="h-9 w-20 shrink-0 rounded-full" />
             ))}
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
@@ -214,13 +217,13 @@ const ProductsPage = () => {
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
-              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold capitalize border transition-all ${
+              className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold border transition-all ${
                 filters.category === category
                   ? "bg-brand text-white border-brand shadow-sm"
                   : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
               }`}
             >
-              {category}
+              {prettify(category)}
             </button>
           ))}
         </div>
@@ -247,13 +250,13 @@ const ProductsPage = () => {
             <button
               key={category}
               onClick={() => handleCategoryChange(category)}
-              className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold capitalize border transition-all ${
+              className={`shrink-0 px-4 py-2 rounded-full text-sm font-semibold border transition-all ${
                 filters.category === category
                   ? "bg-brand text-white border-brand shadow-sm"
                   : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
               }`}
             >
-              {category}
+              {prettify(category)}
             </button>
           ))}
         </div>
@@ -263,7 +266,7 @@ const ProductsPage = () => {
           <div className="flex items-center gap-3">
             <h2 className="text-xl md:text-2xl font-bold text-slate-800">
               {filters.category ? (
-                <span className="capitalize">{filters.category}</span>
+                <span>{prettify(filters.category)}</span>
               ) : (
                 "All Products"
               )}
@@ -312,7 +315,7 @@ const ProductsPage = () => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 pb-20 md:pb-0">
+          <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 pb-20 md:pb-0">
             {cards}
           </div>
         )}

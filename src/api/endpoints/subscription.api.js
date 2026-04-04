@@ -77,6 +77,24 @@ const subscriptionAPI = {
     );
     return response.data;
   },
+
+  /** Undo a previously skipped date (full day or specific items) */
+  undoSkip: async (subscriptionId, date, itemIds = []) => {
+    const response = await apiClient.post(
+      `/subscriptions/${subscriptionId}/undo-skip`,
+      { date, ...(itemIds.length > 0 && { itemIds }) },
+    );
+    return response.data;
+  },
+
+  /** Add an extra item to one or more dates */
+  addExtra: async (subscriptionId, date, productId, priceConfigId, qty) => {
+    const response = await apiClient.post(
+      `/subscriptions/${subscriptionId}/add-extra`,
+      { date, productId, priceConfigId, qty },
+    );
+    return response.data;
+  },
 };
 
 export default subscriptionAPI;

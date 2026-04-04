@@ -15,9 +15,9 @@ const ProductSelector = ({ product, selectedConfigs = {}, onConfigToggle, onQuan
       {/* Product header */}
       <div className="flex items-center gap-4 mb-4">
         <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-50 shrink-0 border border-slate-100">
-          {product.imageUrl ? (
+          {product.images?.[0] ? (
             <img
-              src={product.imageUrl}
+              src={product.images?.[0]}
               alt={product.name}
               className="w-full h-full object-cover"
               loading="lazy"
@@ -59,11 +59,11 @@ const ProductSelector = ({ product, selectedConfigs = {}, onConfigToggle, onQuan
                 </div>
               )}
               <span className={`block text-sm font-bold ${isSelected ? "text-white" : "text-slate-800"}`}>
-                {config.displayLabel || `${config.value} ${config.unit}`}
+                {config.label || `${config.qty} ${config.unit}`}
               </span>
               <div className="flex items-center gap-1.5 mt-1">
-                <span className={`text-sm font-black ${isSelected ? "text-white" : "text-brand"}`}>₹{config.price}</span>
-                {config.mrp > config.price && (
+                <span className={`text-sm font-black ${isSelected ? "text-white" : "text-brand"}`}>₹{config.sellingPrice}</span>
+                {config.mrp > config.sellingPrice && (
                   <span className={`text-[10px] line-through ${isSelected ? "text-white/60" : "text-slate-400"}`}>₹{config.mrp}</span>
                 )}
               </div>
@@ -83,13 +83,13 @@ const ProductSelector = ({ product, selectedConfigs = {}, onConfigToggle, onQuan
             .map((config) => {
               const configId = config._id || config.id;
               const qty = selectedConfigs[configId] || 1;
-              const lineTotal = config.price * qty;
+              const lineTotal = config.sellingPrice * qty;
 
               return (
                 <div key={configId} className="flex items-center justify-between">
                   <div>
                     <span className="text-sm text-slate-600 font-medium block">
-                      {config.displayLabel || `${config.value} ${config.unit}`}
+                      {config.label || `${config.qty} ${config.unit}`}
                     </span>
                     <span className="text-xs text-slate-400">₹{lineTotal}/day</span>
                   </div>

@@ -51,7 +51,7 @@ const OrderSummary = ({
             const name =
               item.productSnapshot?.name || item.product?.name || "Product";
             const image =
-              item.productSnapshot?.imageUrl || item.product?.imageUrl;
+              item.productSnapshot?.images?.[0] || item.product?.images?.[0];
 
             return (
               <li key={item._id} className="flex items-center gap-3 py-3">

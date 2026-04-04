@@ -11,7 +11,7 @@ const SubscriptionSummary = ({
   const [paymentMethod, setPaymentMethod] = useState("wallet");
 
   const dailyCost = items.reduce(
-    (sum, item) => sum + item.config.price * item.quantity,
+    (sum, item) => sum + item.config.sellingPrice * item.quantity,
     0,
   );
   const totalDays = selectedDates.size;
@@ -19,8 +19,9 @@ const SubscriptionSummary = ({
   const canAffordWallet = walletBalance >= totalCost;
   const remainingBalance = walletBalance - totalCost;
   const totalSavings = items.reduce((sum, item) => {
-    if (item.config.mrp > item.config.price) {
-      return sum + (item.config.mrp - item.config.price) * item.quantity * totalDays;
+    const price = item.config.sellingPrice;
+    if (item.config.mrp > price) {
+      return sum + (item.config.mrp - price) * item.quantity * totalDays;
     }
     return sum;
   }, 0);
@@ -44,8 +45,8 @@ const SubscriptionSummary = ({
       {/* Line items */}
       <div className="space-y-2 mb-4">
         {items.map((item) => {
-          const label = item.config.displayLabel || `${item.config.value} ${item.config.unit}`;
-          const lineTotal = item.config.price * item.quantity * totalDays;
+          const label = item.config.label || `${item.config.qty} ${item.config.unit}`;
+          const lineTotal = item.config.sellingPrice * item.quantity * totalDays;
           return (
             <div key={item.productId} className="flex items-center justify-between text-sm">
               <span className="text-slate-600">
@@ -56,7 +57,7 @@ const SubscriptionSummary = ({
                 )}
               </span>
               <span className="font-semibold text-slate-700">
-                ₹{item.config.price * item.quantity} x {totalDays} = ₹{lineTotal}
+                ₹{item.config.sellingPrice * item.quantity} x {totalDays} = ₹{lineTotal}
               </span>
             </div>
           );

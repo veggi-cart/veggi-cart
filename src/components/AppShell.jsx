@@ -26,7 +26,7 @@ const CartThumbnails = () => {
   const items = cart?.items ?? [];
   const images = [];
   for (const item of items) {
-    const url = item.productId?.imageUrl;
+    const url = item.productId?.images?.[0];
     if (url && !images.includes(url)) {
       images.push(url);
       if (images.length >= 3) break;

@@ -24,7 +24,7 @@ const CartItem = ({ item }) => {
     }
   };
 
-  const unitPrice = config.price;
+  const unitPrice = config.sellingPrice;
   const mrp = config.mrp;
   const itemTotal = unitPrice * item.quantity;
   const itemSavings = (mrp - unitPrice) * item.quantity;
@@ -34,9 +34,9 @@ const CartItem = ({ item }) => {
       <div className="flex gap-4">
         {/* Product Image */}
         <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden bg-slate-50 shrink-0 border border-slate-100">
-          {product.imageUrl ? (
+          {product.images?.[0] ? (
             <img
-              src={product.imageUrl}
+              src={product.images?.[0]}
               alt={product.name}
               className="w-full h-full object-cover"
               loading="lazy"
@@ -56,7 +56,7 @@ const CartItem = ({ item }) => {
                 {product.name}
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-                {config.displayLabel || `${config.value} ${config.unit}`}
+                {config.label || `${config.qty} ${config.unit}`}
               </p>
             </div>
 

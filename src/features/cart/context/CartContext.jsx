@@ -137,7 +137,7 @@ export const CartProvider = ({ children }) => {
             c.id?.toString() === item.priceConfigId?.toString(),
         );
         if (config) {
-          acc.totalAmount += config.price * item.quantity;
+          acc.totalAmount += config.sellingPrice * item.quantity;
           acc.totalMrp += config.mrp * item.quantity;
           acc.itemCount += item.quantity;
         }

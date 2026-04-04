@@ -19,7 +19,7 @@ const OrderCard = ({ order, onCancel }) => {
   const firstName =
     firstItem?.productSnapshot?.name || firstItem?.product?.name || "Item";
   const firstImage =
-    firstItem?.productSnapshot?.imageUrl || firstItem?.product?.imageUrl;
+    firstItem?.productSnapshot?.images?.[0] || firstItem?.product?.images?.[0];
 
   const date = new Date(order.createdAt).toLocaleDateString("en-IN", {
     day: "numeric",

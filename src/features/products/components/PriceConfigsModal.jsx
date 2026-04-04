@@ -14,9 +14,9 @@ const PriceConfigsModal = (product, setShowConfigModal) => {
         {/* Modal Header */}
         <div className="sticky top-0 bg-white border-b-2 border-slate-200 p-4 sm:p-6 flex items-start justify-between z-10">
           <div className="flex gap-3 sm:gap-4 flex-1">
-            {product.imageUrl ? (
+            {product.images?.[0] ? (
               <img
-                src={product.imageUrl}
+                src={product.images?.[0]}
                 alt={product.name}
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg object-cover shrink-0"
               />
@@ -44,9 +44,10 @@ const PriceConfigsModal = (product, setShowConfigModal) => {
         <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(85vh-100px)] sm:max-h-[calc(90vh-120px)]">
           <div className="space-y-3">
             {product.priceConfigs.map((config) => {
+              const cp = config.sellingPrice ?? 0;
               const configDiscount =
-                config.mrp > config.price
-                  ? ((config.mrp - config.price) / config.mrp) * 100
+                config.mrp > cp
+                  ? ((config.mrp - cp) / config.mrp) * 100
                   : 0;
 
               return (
@@ -58,7 +59,7 @@ const PriceConfigsModal = (product, setShowConfigModal) => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
                         <span className="text-base sm:text-lg font-bold text-slate-800">
-                          {config.value} {config.unit}
+                          {config.qty} {config.unit}
                         </span>
                         {configDiscount > 0 && (
                           <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
@@ -68,9 +69,9 @@ const PriceConfigsModal = (product, setShowConfigModal) => {
                       </div>
                       <div className="flex items-baseline gap-2">
                         <span className="text-lg sm:text-xl font-bold text-brand">
-                          ₹{config.price.toFixed(2)}
+                          ₹{cp}
                         </span>
-                        {config.mrp > config.price && (
+                        {config.mrp > cp && (
                           <span className="text-xs sm:text-sm text-slate-400 line-through">
                             ₹{config.mrp.toFixed(2)}
                           </span>

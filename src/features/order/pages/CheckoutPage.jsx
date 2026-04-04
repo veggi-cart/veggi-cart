@@ -138,11 +138,11 @@ const CheckoutPage = () => {
       );
       return {
         _id: item._id,
-        productSnapshot: { name: product?.name, imageUrl: product?.imageUrl },
+        productSnapshot: { name: product?.name, images: product?.images },
         value: config?.quantity,
         unit: config?.unit,
         quantity: item.quantity,
-        totalPrice: (config?.price ?? 0) * item.quantity,
+        totalPrice: (config?.sellingPrice ?? 0) * item.quantity,
       };
     }) ?? [];
 
